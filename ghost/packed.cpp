@@ -252,7 +252,7 @@ void CPacked :: Decompress( bool allBlocks )
 			break;
 	}
 
-	CONSOLE_Print( "[PACKED] decompressed " + UTIL_ToString( m_Decompressed.size( ) ) + " bytes" );
+	CONSOLE_Print( "[PACKED] decompressed " + UTIL_ToString((uint32_t) m_Decompressed.size( ) ) + " bytes" );
 
 	if( allBlocks || m_NumBlocks == 1 )
 	{
@@ -265,7 +265,7 @@ void CPacked :: Decompress( bool allBlocks )
 
 		// the last block is padded with zeros, discard them
 
-		CONSOLE_Print( "[PACKED] discarding " + UTIL_ToString( m_Decompressed.size( ) - m_DecompressedSize ) + " bytes" );
+		CONSOLE_Print( "[PACKED] discarding " + UTIL_ToString(((uint32_t) m_Decompressed.size( )) - m_DecompressedSize ) + " bytes" );
 		m_Decompressed.erase( m_DecompressedSize );
 	}
 }

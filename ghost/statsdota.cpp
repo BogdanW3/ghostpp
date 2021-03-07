@@ -35,13 +35,13 @@ CStatsDOTA :: CStatsDOTA( CBaseGame *nGame ) : CStats( nGame ), m_Winner( 0 ), m
 {
 	CONSOLE_Print( "[STATSDOTA] using dota stats" );
 
-	for( unsigned int i = 0; i < 12; ++i )
+	for( unsigned int i = 0; i < 24; ++i ) //12
 		m_Players[i] = NULL;
 }
 
 CStatsDOTA :: ~CStatsDOTA( )
 {
-	for( unsigned int i = 0; i < 12; ++i )
+	for( unsigned int i = 0; i < 24; ++i ) //12
 	{
 		if( m_Players[i] )
 			delete m_Players[i];
@@ -388,7 +388,7 @@ void CStatsDOTA :: Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID )
 		// check for invalid colours and duplicates
 		// this can only happen if DotA sends us garbage in the "id" value but we should check anyway
 
-		for( unsigned int i = 0; i < 12; ++i )
+		for( unsigned int i = 0; i < 24; ++i ) //12
 		{
 			if( m_Players[i] )
 			{
@@ -401,7 +401,7 @@ void CStatsDOTA :: Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID )
 					return;
 				}
 
-				for( unsigned int j = i + 1; j < 12; ++j )
+				for( unsigned int j = i + 1; j < 24; ++j ) //12
 				{
 					if( m_Players[j] && Colour == m_Players[j]->GetNewColour( ) )
 					{
@@ -415,7 +415,7 @@ void CStatsDOTA :: Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID )
 
 		// save the dotaplayers
 
-		for( unsigned int i = 0; i < 12; ++i )
+		for( unsigned int i = 0; i < 24; ++i ) //12
 		{
 			if( m_Players[i] )
 			{

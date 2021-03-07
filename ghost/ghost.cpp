@@ -48,7 +48,7 @@
 #endif
 
 #define __STORMLIB_SELF__
-#include <stormlib/StormLib.h>
+#include <StormLib.h>
 
 /*
 
@@ -400,6 +400,7 @@ CGHost :: CGHost( CConfig *CFG )
 	m_UDPSocket = new CUDPSocket( );
 	m_UDPSocket->SetBroadcastTarget( CFG->GetString( "udp_broadcasttarget", string( ) ) );
 	m_UDPSocket->SetDontRoute( CFG->GetInt( "udp_dontroute", 0 ) == 0 ? false : true );
+	m_LSocket = new CMDNSSocket();
 	m_ReconnectSocket = NULL;
 	m_GPSProtocol = new CGPSProtocol( );
 	m_CRC = new CCRC32( );
@@ -698,6 +699,7 @@ CGHost :: CGHost( CConfig *CFG )
 CGHost :: ~CGHost( )
 {
 	delete m_UDPSocket;
+	delete m_LSocket;
 	delete m_ReconnectSocket;
 
 	for( vector<CTCPSocket *> :: iterator i = m_ReconnectSockets.begin( ); i != m_ReconnectSockets.end( ); ++i )
@@ -726,7 +728,7 @@ CGHost :: ~CGHost( )
 	// but if you try to recreate the CGHost object within a single session you will probably leak resources!
 
 	if( !m_Callables.empty( ) )
-		CONSOLE_Print( "[GHOST] warning - " + UTIL_ToString( m_Callables.size( ) ) + " orphaned callables were leaked (this is not an error)" );
+		CONSOLE_Print( "[GHOST] warning - " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " orphaned callables were leaked (this is not an error)" );
 
 	delete m_Language;
 	delete m_Map;
@@ -812,7 +814,7 @@ bool CGHost :: Update( long usecBlock )
 			if( !m_AllGamesFinished )
 			{
 				CONSOLE_Print( "[GHOST] all games finished, waiting 60 seconds for threads to finish" );
-				CONSOLE_Print( "[GHOST] there are " + UTIL_ToString( m_Callables.size( ) ) + " threads in progress" );
+				CONSOLE_Print( "[GHOST] there are " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " threads in progress" );
 				m_AllGamesFinished = true;
 				m_AllGamesFinishedTime = GetTime( );
 			}
@@ -826,7 +828,7 @@ bool CGHost :: Update( long usecBlock )
 				else if( GetTime( ) - m_AllGamesFinishedTime >= 60 )
 				{
 					CONSOLE_Print( "[GHOST] waited 60 seconds for threads to finish, exiting anyway" );
-					CONSOLE_Print( "[GHOST] there are " + UTIL_ToString( m_Callables.size( ) ) + " threads still in progress which will be terminated" );
+					CONSOLE_Print( "[GHOST] there are " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " threads still in progress which will be terminated" );
 					m_Exiting = true;
 				}
 			}
@@ -1341,8 +1343,9 @@ void CGHost :: ExtractScripts( )
 		PatchMPQFileName = m_Warcraft3Path + "War3Patch.mpq";
 
 	HANDLE PatchMPQ;
-
-	if( SFileOpenArchive( PatchMPQFileName.c_str( ), 0, MPQ_OPEN_FORCE_MPQ_V1, &PatchMPQ ) )
+	wchar_t WPatchMPQFileName[255];
+	mbstowcs(WPatchMPQFileName, PatchMPQFileName.c_str(), 255);
+	if( SFileOpenArchive(WPatchMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &PatchMPQ ) )
 	{
 		CONSOLE_Print( "[GHOST] loading MPQ file [" + PatchMPQFileName + "]" );
 		HANDLE SubFile;
@@ -1358,7 +1361,7 @@ void CGHost :: ExtractScripts( )
 				char *SubFileData = new char[FileLength];
 				DWORD BytesRead = 0;
 
-				if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+				if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr ) )
 				{
 					CONSOLE_Print( "[GHOST] extracting Scripts\\common.j from MPQ file to [" + m_MapCFGPath + "common.j]" );
 					UTIL_FileWrite( m_MapCFGPath + "common.j", (unsigned char *)SubFileData, BytesRead );
@@ -1385,7 +1388,7 @@ void CGHost :: ExtractScripts( )
 				char *SubFileData = new char[FileLength];
 				DWORD BytesRead = 0;
 
-				if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+				if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 				{
 					CONSOLE_Print( "[GHOST] extracting Scripts\\blizzard.j from MPQ file to [" + m_MapCFGPath + "blizzard.j]" );
 					UTIL_FileWrite( m_MapCFGPath + "blizzard.j", (unsigned char *)SubFileData, BytesRead );

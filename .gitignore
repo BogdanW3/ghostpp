@@ -1,7 +1,11 @@
+.vs
+*.a
 *.o
 *.so
+*.user
 ghost++
 ghost.cfg
 ghost/ghost++
 ghost.log
 ghost.dbs
+x64

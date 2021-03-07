@@ -26,7 +26,7 @@
 #include "map.h"
 
 #define __STORMLIB_SELF__
-#include <stormlib/StormLib.h>
+#include <StormLib.h>
 
 #define ROTL(x,n) ((x)<<(n))|((x)>>(32-(n)))	// this won't work with signed types
 #define ROTR(x,n) ((x)>>(n))|((x)<<(32-(n)))	// this won't work with signed types
@@ -246,7 +246,9 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 	HANDLE MapMPQ;
 	bool MapMPQReady = false;
 
-	if( SFileOpenArchive( MapMPQFileName.c_str( ), 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ ) )
+	wchar_t WMapMPQFileName[512];
+	mbstowcs(WMapMPQFileName, MapMPQFileName.c_str(), 512);
+	if( SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ ) )
 	{
 		CONSOLE_Print( "[MAP] loading MPQ file [" + MapMPQFileName + "]" );
 		MapMPQReady = true;
@@ -313,7 +315,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 							char *SubFileData = new char[FileLength];
 							DWORD BytesRead = 0;
 
-							if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+							if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 							{
 								CONSOLE_Print( "[MAP] overriding default common.j with map copy while calculating map_crc/sha1" );
 								OverrodeCommonJ = true;
@@ -349,7 +351,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 							char *SubFileData = new char[FileLength];
 							DWORD BytesRead = 0;
 
-							if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+							if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 							{
 								CONSOLE_Print( "[MAP] overriding default blizzard.j with map copy while calculating map_crc/sha1" );
 								OverrodeBlizzardJ = true;
@@ -407,7 +409,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 								char *SubFileData = new char[FileLength];
 								DWORD BytesRead = 0;
 
-								if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+								if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 								{
 									if( *i == "war3map.j" || *i == "scripts\\war3map.j" )
 										FoundScript = true;
@@ -474,7 +476,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 					char *SubFileData = new char[FileLength];
 					DWORD BytesRead = 0;
 
-					if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead ) )
+					if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 					{
 						istringstream ISS( string( SubFileData, BytesRead ) );
 
@@ -859,7 +861,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 	if( m_MapObservers == MAPOBS_ALLOWED || m_MapObservers == MAPOBS_REFEREES )
 	{
-		CONSOLE_Print( "[MAP] adding " + UTIL_ToString( MAX_SLOTS - m_Slots.size( ) ) + " observer slots" );
+		CONSOLE_Print( "[MAP] adding " + UTIL_ToString( MAX_SLOTS -((short) m_Slots.size( )) ) + " observer slots" );
 
 		while( m_Slots.size( ) < MAX_SLOTS )
 			m_Slots.push_back( CGameSlot( 0, 255, SLOTSTATUS_OPEN, 0, MAX_SLOTS, MAX_SLOTS, SLOTRACE_RANDOM ) );

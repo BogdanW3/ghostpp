@@ -884,9 +884,9 @@ bool CAdminGame :: EventPlayerBotCommand( CGamePlayer *player, string command, s
 		else if( Command == "getgames" )
 		{
 			if( m_GHost->m_CurrentGame )
-				SendChat( player, m_GHost->m_Language->GameIsInTheLobby( m_GHost->m_CurrentGame->GetDescription( ), UTIL_ToString( m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ) );
+				SendChat( player, m_GHost->m_Language->GameIsInTheLobby( m_GHost->m_CurrentGame->GetDescription( ), UTIL_ToString((unsigned long) m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ) );
 			else
-				SendChat( player, m_GHost->m_Language->ThereIsNoGameInTheLobby( UTIL_ToString( m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ) );
+				SendChat( player, m_GHost->m_Language->ThereIsNoGameInTheLobby( UTIL_ToString((unsigned long) m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ) );
 		}
 
 		//

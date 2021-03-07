@@ -21,7 +21,7 @@ SHELL = /bin/sh
 SYSTEM = $(shell uname)
 C++ = g++
 CC = gcc
-DFLAGS = -D__SYS_ZLIB
+DFLAGS = -D__SYS_ZLIB -D__SYS_BZLIB
 OFLAGS =
 LFLAGS = -lbz2 -lz
 CFLAGS = -fPIC
@@ -44,7 +44,7 @@ LIB = libStorm.dylib
 else
 OBJS += StormPortLinux.o
 LFLAGS += -shared
-LIB = libStorm.so
+LIB = libStorm.a
 endif
 
 all: $(OBJS) $(COBJS) $(LIB)

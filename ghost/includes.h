@@ -23,11 +23,11 @@
 
 // standard integer sizes for 64 bit compatibility
 
-#ifdef WIN32
+/*#ifdef _MSC_VER
  #include "ms_stdint.h"
-#else
+#else*/
  #include <stdint.h>
-#endif
+//#endif
 
 // STL
 

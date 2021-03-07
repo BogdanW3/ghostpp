@@ -30,7 +30,7 @@ class CDBDotAPlayer;
 class CStatsDOTA : public CStats
 {
 private:
-	CDBDotAPlayer *m_Players[12];
+	CDBDotAPlayer *m_Players[24]; //12
 	uint32_t m_Winner;
 	uint32_t m_Min;
 	uint32_t m_Sec;

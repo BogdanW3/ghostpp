@@ -268,7 +268,7 @@ bool CStatsW3MMD :: ProcessAction( CIncomingAction *Action )
 											string Format = DefEvent[DefEvent.size( ) - 1];
 
 											if( Tokens.size( ) - 2 != DefEvent.size( ) - 1 )
-												CONSOLE_Print( "[STATSW3MMD: " + m_Game->GetGameName( ) + "] Event [" + KeyString + "] found with " + UTIL_ToString( Tokens.size( ) - 2 ) + " arguments but expected " + UTIL_ToString( DefEvent.size( ) - 1 ) + " arguments, ignoring" );
+												CONSOLE_Print( "[STATSW3MMD: " + m_Game->GetGameName( ) + "] Event [" + KeyString + "] found with " + UTIL_ToString(((unsigned long) Tokens.size( )) - 2 ) + " arguments but expected " + UTIL_ToString(((unsigned long) DefEvent.size( )) - 1 ) + " arguments, ignoring" );
 											else
 											{
 												// replace the markers in the format string with the arguments

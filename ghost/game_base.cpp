@@ -125,7 +125,7 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 
 			in.close( );
 
-			CONSOLE_Print( "[GAME: " + m_GameName + "] loaded " + UTIL_ToString( m_IPBlackList.size( ) ) + " lines from IP blacklist file" );
+			CONSOLE_Print( "[GAME: " + m_GameName + "] loaded " + UTIL_ToString((unsigned long) m_IPBlackList.size( ) ) + " lines from IP blacklist file" );
 		}
 	}
 
@@ -330,7 +330,7 @@ uint32_t CBaseGame :: GetNumHumanPlayers( )
 
 string CBaseGame :: GetDescription( )
 {
-	string Description = m_GameName + " : " + m_OwnerName + " : " + UTIL_ToString( GetNumHumanPlayers( ) ) + "/" + UTIL_ToString( m_GameLoading || m_GameLoaded ? m_StartPlayers : m_Slots.size( ) );
+	string Description = m_GameName + " : " + m_OwnerName + " : " + UTIL_ToString( GetNumHumanPlayers( ) ) + "/" + UTIL_ToString( m_GameLoading || m_GameLoaded ? m_StartPlayers :((unsigned long) m_Slots.size( ) ));
 
 	if( m_GameLoading || m_GameLoaded )
 		Description += " : " + UTIL_ToString( ( m_GameTicks / 1000 ) / 60 ) + "m";
@@ -494,6 +494,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 				MapHeight.push_back( 0 );
 				MapHeight.push_back( 0 );
 				m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), MapWidth, MapHeight, m_GameName, "Varlock", GetTime( ) - m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath( ), m_SaveGame->GetMagicNumber( ), MAX_SLOTS, MAX_SLOTS, m_HostPort, FixedHostCounter, m_EntryKey ) );
+				m_GHost->m_LSocket->Broadcast(m_Protocol->SEND_W3GS_MDNS_GAMEINFO(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), MapWidth, MapHeight, m_GameName, "Varlock", GetTime() - m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath(), m_SaveGame->GetMagicNumber(), MAX_SLOTS, MAX_SLOTS, m_HostPort, FixedHostCounter, m_EntryKey));
 			}
 			else
 			{
@@ -502,6 +503,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 				uint32_t MapGameType = MAPGAMETYPE_UNKNOWN0;
 				m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), m_Map->GetMapWidth( ), m_Map->GetMapHeight( ), m_GameName, "Varlock", GetTime( ) - m_CreationTime, m_Map->GetMapPath( ), m_Map->GetMapCRC( ), MAX_SLOTS, MAX_SLOTS, m_HostPort, FixedHostCounter, m_EntryKey ) );
+				m_GHost->m_LSocket->Broadcast(m_Protocol->SEND_W3GS_MDNS_GAMEINFO(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), m_Map->GetMapWidth(), m_Map->GetMapHeight(), m_GameName, "Varlock", GetTime() - m_CreationTime, m_Map->GetMapPath(), m_Map->GetMapCRC(), MAX_SLOTS, MAX_SLOTS, m_HostPort, FixedHostCounter, m_EntryKey));
 			}
 		}
 
@@ -1750,7 +1752,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 
 	if( joinPlayer->GetName( ).empty( ) || joinPlayer->GetName( ).size( ) > 15 )
 	{
-		CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] is trying to join the game with an invalid name of length " + UTIL_ToString( joinPlayer->GetName( ).size( ) ) );
+		CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] is trying to join the game with an invalid name of length " + UTIL_ToString((unsigned long) joinPlayer->GetName( ).size( ) ) );
 		potential->Send( m_Protocol->SEND_W3GS_REJECTJOIN( REJECTJOIN_FULL ) );
 		potential->SetDeleteMe( true );
 		return;
@@ -4263,7 +4265,7 @@ void CBaseGame :: BalanceSlots( )
 	{
 		unsigned char PID = (*i)->GetPID( );
 
-		if( PID < 13 )
+		if( PID < 25 ) //13
 		{
 			unsigned char SID = GetSIDFromPID( PID );
 

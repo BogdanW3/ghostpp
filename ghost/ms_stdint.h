@@ -33,8 +33,8 @@
 #error "Use this header only with Microsoft Visual C++ compilers!"
 #endif // _MSC_VER ]
 
-#ifndef _MSC_STDINT_H_ // [
-#define _MSC_STDINT_H_
+#ifndef _STDINT // [
+#define _STDINT
 
 #if _MSC_VER > 1000
 #pragma once
@@ -62,10 +62,6 @@
 #  endif
 #endif
 
-// Workaround for V2010
-#ifndef _STDINT
-#define _STDINT
-#endif
 // 7.18.1 Integer types
 
 // 7.18.1.1 Exact-width integer types
