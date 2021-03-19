@@ -229,39 +229,4 @@ public:
 	virtual void RecvFrom(fd_set* fd, struct sockaddr_in* sin, string* message);
 };
 
-
-//
-// CMDNSSocket
-//
-
-class CMDNSSocket : public CSocket
-{
-protected:
-	//struct in_addr m_BroadcastTarget;
-public:
-	CMDNSSocket();
-	virtual ~CMDNSSocket();
-
-	virtual bool SendTo(struct sockaddr_in sin, BYTEARRAY message);
-	virtual bool SendTo(string address, uint16_t port, BYTEARRAY message);
-	virtual bool Broadcast(BYTEARRAY message);
-	//virtual void SetBroadcastTarget(string subnet);
-	//virtual void SetDontRoute(bool dontRoute);
-};
-
-//
-// CMDNSServer
-//
-
-class CMDNSServer : public CMDNSSocket
-{
-public:
-	CMDNSServer();
-	virtual ~CMDNSServer();
-
-	virtual bool Bind(struct sockaddr_in sin);
-	virtual bool Bind(string address, uint16_t port);
-	virtual void RecvFrom(fd_set* fd, struct sockaddr_in* sin, string* message);
-};
-
 #endif

@@ -27,6 +27,8 @@
 
 #define __STORMLIB_SELF__
 #include <StormLib.h>
+#define __CASCLIB_SELF__
+#include <casclib/CascLib.h>
 
 #define ROTL(x,n) ((x)<<(n))|((x)>>(32-(n)))	// this won't work with signed types
 #define ROTR(x,n) ((x)>>(n))|((x)<<(32-(n)))	// this won't work with signed types
@@ -254,7 +256,55 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 		MapMPQReady = true;
 	}
 	else
-		CONSOLE_Print( "[MAP] warning - unable to load MPQ file [" + MapMPQFileName + "]" );
+	{
+		HANDLE Casc;
+		wchar_t WWarcraft3Path[255];
+		mbstowcs(WWarcraft3Path, m_GHost->m_Warcraft3Path.c_str(), 255);
+		if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
+		{
+			HANDLE MPQFile;
+			CONSOLE_Print("[MAP] loading MPQ from CASC");
+			std::string map_path = CFG->GetString("map_path", string());
+			if (CascOpenFile(Casc, (std::string("war3.w3mod:") + map_path).c_str(), 0, CASC_OPEN_BY_NAME, &MPQFile))
+			{
+				uint32_t FileLength = CascGetFileSize(MPQFile, NULL);
+
+				if (FileLength > 0 && FileLength != 0xFFFFFFFF)
+				{
+					char* SubFileData = new char[FileLength];
+					DWORD BytesRead = 0;
+
+					if (CascReadFile(MPQFile, SubFileData, FileLength, &BytesRead))
+					{
+						CONSOLE_Print("[MAP] extracting map from CASC to [" + m_GHost->m_MapCFGPath + map_path +"]");
+						std::string local_path = m_GHost->m_MapCFGPath + map_path;
+						UTIL_FileWrite(local_path, (unsigned char*)SubFileData, BytesRead);
+
+						m_MapData = UTIL_FileRead(local_path);
+
+						wchar_t WMapMPQFileName[512];
+						mbstowcs(WMapMPQFileName, local_path.c_str(), 512);
+						if (SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ))
+						{
+							CONSOLE_Print("[MAP] loading MPQ file [" + MapMPQFileName + "]");
+							MapMPQReady = true;
+						}
+						else
+							CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + local_path + "]");
+
+					}
+					else
+						CONSOLE_Print("[MAP] warning - unable to extract MPQ from CASC");
+
+					delete[] SubFileData;
+				}
+			}
+			else
+				CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + map_path + "]");
+		}
+		else
+			CONSOLE_Print("[MAP] warning - unable to load CASC - error code " + UTIL_ToString(GetLastError()));
+	}
 
 	// try to calculate map_size, map_info, map_crc, map_sha1
 
@@ -492,10 +542,12 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 						ISS.read( (char *)&FileFormat, 4 );				// file format (18 = ROC, 25 = TFT)
 
-						if( FileFormat == 18 || FileFormat == 25 )
+						if( FileFormat == 18 || FileFormat == 25 || FileFormat == 28 || FileFormat == 31)
 						{
 							ISS.seekg( 4, ios :: cur );					// number of saves
 							ISS.seekg( 4, ios :: cur );					// editor version
+							if (FileFormat >= 28)						// game version
+								ISS.seekg(16, ios :: cur);
 							getline( ISS, GarbageString, '\0' );		// map name
 							getline( ISS, GarbageString, '\0' );		// map author
 							getline( ISS, GarbageString, '\0' );		// map description
@@ -509,7 +561,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 							if( FileFormat == 18 )
 								ISS.seekg( 4, ios :: cur );				// campaign background number
-							else if( FileFormat == 25 )
+							else
 							{
 								ISS.seekg( 4, ios :: cur );				// loading screen background number
 								getline( ISS, GarbageString, '\0' );	// path of custom loading screen model
@@ -521,7 +573,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 							if( FileFormat == 18 )
 								ISS.seekg( 4, ios :: cur );				// map loading screen number
-							else if( FileFormat == 25 )
+							else
 							{
 								ISS.seekg( 4, ios :: cur );				// used game data set
 								getline( ISS, GarbageString, '\0' );	// prologue screen path
@@ -531,7 +583,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 							getline( ISS, GarbageString, '\0' );		// prologue screen title
 							getline( ISS, GarbageString, '\0' );		// prologue screen subtitle
 
-							if( FileFormat == 25 )
+							if( FileFormat >= 25 )
 							{
 								ISS.seekg( 4, ios :: cur );				// uses terrain fog
 								ISS.seekg( 4, ios :: cur );				// fog start z height
@@ -548,6 +600,12 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 								ISS.seekg( 1, ios :: cur );				// custom water tinting green value
 								ISS.seekg( 1, ios :: cur );				// custom water tinting blue value
 								ISS.seekg( 1, ios :: cur );				// custom water tinting alpha value
+								if (FileFormat >= 28)
+								{
+									ISS.seekg(4, ios :: cur);			// LUA toggle
+									if (FileFormat >= 31)
+										ISS.seekg(8, ios :: cur);		// Supported modes and game data
+								}
 							}
 
 							ISS.read( (char *)&RawMapNumPlayers, 4 );	// number of players
@@ -597,6 +655,9 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 								ISS.seekg( 4, ios :: cur );				// start position y
 								ISS.seekg( 4, ios :: cur );				// ally low priorities
 								ISS.seekg( 4, ios :: cur );				// ally high priorities
+								if (FileFormat >= 31)
+									ISS.seekg( 4, ios :: cur);			// enemy low priorities
+									ISS.seekg( 4, ios :: cur);			// evemy high priorities
 
 								if( Slot.GetSlotStatus( ) != SLOTSTATUS_CLOSED )
 									Slots.push_back( Slot );

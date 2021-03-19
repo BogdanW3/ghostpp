@@ -28,7 +28,7 @@
 //
 
 class CUDPSocket;
-class CMDNSSocket;
+class CBonjour;
 class CTCPServer;
 class CTCPSocket;
 class CGPSProtocol;
@@ -56,7 +56,7 @@ class CGHost
 {
 public:
 	CUDPSocket *m_UDPSocket;				// a UDP socket for sending broadcasts and other junk (used with !sendlan)
-	CMDNSSocket* m_LSocket;					// an MDNS socket for sending broadcasts and other junk (used with !sendlan)
+	CBonjour* m_Bonjour;						// an mDNS conection for LAN games on 1.30.2+
 	CTCPServer *m_ReconnectSocket;			// listening socket for GProxy++ reliable reconnects
 	vector<CTCPSocket *> m_ReconnectSockets;// vector of sockets attempting to reconnect (connected but not identified yet)
 	CGPSProtocol *m_GPSProtocol;
