@@ -102,6 +102,7 @@ private:
 	BYTEARRAY m_MapInfo;						// config value: map info (4 bytes) -> this is the real CRC
 	BYTEARRAY m_MapCRC;							// config value: map crc (4 bytes) -> this is not the real CRC, it's the "xoro" value
 	BYTEARRAY m_MapSHA1;						// config value: map sha1 (20 bytes)
+	BYTEARRAY m_MapHash;						// config value: archive sha1 (20 bytes)
 	unsigned char m_MapSpeed;
 	unsigned char m_MapVisibility;
 	unsigned char m_MapObservers;
@@ -137,6 +138,7 @@ public:
 	BYTEARRAY GetMapInfo( )					{ return m_MapInfo; }
 	BYTEARRAY GetMapCRC( )					{ return m_MapCRC; }
 	BYTEARRAY GetMapSHA1( )					{ return m_MapSHA1; }
+	BYTEARRAY GetMapHash()					{ return m_MapHash; }
 	unsigned char GetMapSpeed( )			{ return m_MapSpeed; }
 	unsigned char GetMapVisibility( )		{ return m_MapVisibility; }
 	unsigned char GetMapObservers( )		{ return m_MapObservers; }

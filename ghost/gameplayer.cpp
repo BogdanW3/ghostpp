@@ -505,7 +505,11 @@ void CGamePlayer :: ProcessPackets( )
 
 				m_Game->EventPlayerPongToHost( this, Pong );
 				break;
+			case CGameProtocol::W3GS_REFORGED_UNKNOWN:
+				m_Game->SendAll(Packet->GetData());
+				break;
 			}
+
 		}
 		else if( Packet->GetPacketType( ) == GPS_HEADER_CONSTANT )
 		{

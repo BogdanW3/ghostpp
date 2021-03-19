@@ -229,18 +229,18 @@ unsigned char CMap :: GetMapLayoutStyle( )
 	return 3;
 }
 
-void CMap :: Load( CConfig *CFG, string nCFGFile )
+void CMap::Load(CConfig* CFG, string nCFGFile)
 {
 	m_Valid = true;
 	m_CFGFile = nCFGFile;
 
 	// load the map data
 
-	m_MapLocalPath = CFG->GetString( "map_localpath", string( ) );
-	m_MapData.clear( );
+	m_MapLocalPath = CFG->GetString("map_localpath", string());
+	m_MapData.clear();
 
-	if( !m_MapLocalPath.empty( ) )
-		m_MapData = UTIL_FileRead( m_GHost->m_MapPath + m_MapLocalPath );
+	if (!m_MapLocalPath.empty())
+		m_MapData = UTIL_FileRead(m_GHost->m_MapPath + m_MapLocalPath);
 
 	// load the map MPQ
 
@@ -250,60 +250,80 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 	wchar_t WMapMPQFileName[512];
 	mbstowcs(WMapMPQFileName, MapMPQFileName.c_str(), 512);
-	if( SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ ) )
+	if (SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1 | MPQ_OPEN_READ_ONLY, &MapMPQ))
 	{
-		CONSOLE_Print( "[MAP] loading MPQ file [" + MapMPQFileName + "]" );
+		CONSOLE_Print("[MAP] loading MPQ file [" + MapMPQFileName + "]");
 		MapMPQReady = true;
 	}
-	else
+	if (!MapMPQReady)
 	{
-		HANDLE Casc;
-		wchar_t WWarcraft3Path[255];
-		mbstowcs(WWarcraft3Path, m_GHost->m_Warcraft3Path.c_str(), 255);
-		if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
+		std::string map_path = CFG->GetString("map_path", string());
+		std::string local_path = m_GHost->m_MapCFGPath + map_path;
+		if (UTIL_FileExists(local_path))
 		{
-			HANDLE MPQFile;
-			CONSOLE_Print("[MAP] loading MPQ from CASC");
-			std::string map_path = CFG->GetString("map_path", string());
-			if (CascOpenFile(Casc, (std::string((m_GHost->m_LANWar3Version == 30 ? "enus-" : "war3.w3mod:")) + map_path).c_str(), 0, CASC_OPEN_BY_NAME, &MPQFile))
+			m_MapData = UTIL_FileRead(local_path);
+
+			wchar_t WMapMPQFileName[512];
+			mbstowcs(WMapMPQFileName, local_path.c_str(), 512);
+			if (SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ))
 			{
-				uint32_t FileLength = CascGetFileSize(MPQFile, NULL);
+				CONSOLE_Print("[MAP] loading MPQ file [" + local_path + "]");
+				MapMPQReady = true;
+			}
+		}
+		if (!MapMPQReady)
+		{
+			HANDLE Casc;
+			wchar_t WWarcraft3Path[255];
 
-				if (FileLength > 0 && FileLength != 0xFFFFFFFF)
+			std::string CascPath = m_GHost->m_Warcraft3Path + (m_GHost->m_PTR ? ":w3t" : "w3");
+			mbstowcs(WWarcraft3Path, CascPath.c_str(), 255);
+			if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
+			{
+				HANDLE MPQFile;
+				CONSOLE_Print("[MAP] loading MPQ from CASC");
+				if (CascOpenFile(Casc, (std::string((m_GHost->m_LANWar3Version == 30 ? "enus-" : "war3.w3mod:")) + map_path).c_str(), 0, CASC_OPEN_BY_NAME, &MPQFile))
 				{
-					char* SubFileData = new char[FileLength];
-					DWORD BytesRead = 0;
+					uint32_t FileLength = CascGetFileSize(MPQFile, NULL);
 
-					if (CascReadFile(MPQFile, SubFileData, FileLength, &BytesRead))
+					if (FileLength > 0 && FileLength != 0xFFFFFFFF)
 					{
-						CONSOLE_Print("[MAP] extracting map from CASC to [" + m_GHost->m_MapCFGPath + map_path +"]");
-						std::string local_path = m_GHost->m_MapCFGPath + map_path;
-						UTIL_FileWrite(local_path, (unsigned char*)SubFileData, BytesRead);
+						char* SubFileData = new char[FileLength];
+						DWORD BytesRead = 0;
 
-						m_MapData = UTIL_FileRead(local_path);
-
-						wchar_t WMapMPQFileName[512];
-						mbstowcs(WMapMPQFileName, local_path.c_str(), 512);
-						if (SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ))
+						if (CascReadFile(MPQFile, SubFileData, FileLength, &BytesRead))
 						{
-							CONSOLE_Print("[MAP] loading MPQ file [" + MapMPQFileName + "]");
-							MapMPQReady = true;
+							CONSOLE_Print("[MAP] extracting map from CASC to [" + local_path + "]");
+							UTIL_FileWrite(local_path, (unsigned char*)SubFileData, BytesRead);
+
+							m_MapData = UTIL_FileRead(local_path);
+
+							wchar_t WMapMPQFileName[512];
+							mbstowcs(WMapMPQFileName, local_path.c_str(), 512);
+							if (SFileOpenArchive(WMapMPQFileName, 0, MPQ_OPEN_FORCE_MPQ_V1, &MapMPQ))
+							{
+								CONSOLE_Print("[MAP] loading MPQ file [" + MapMPQFileName + "]");
+								MapMPQReady = true;
+							}
+							else
+								CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + local_path + "]");
+
 						}
 						else
-							CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + local_path + "]");
+							CONSOLE_Print("[MAP] warning - unable to extract MPQ from CASC");
 
+						delete[] SubFileData;
 					}
-					else
-						CONSOLE_Print("[MAP] warning - unable to extract MPQ from CASC");
-
-					delete[] SubFileData;
+					CascCloseFile(MPQFile);
 				}
+				else
+					CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + map_path + "] with code: " + UTIL_ToString(GetLastError()));
+
+				CascCloseStorage(Casc);
 			}
 			else
-				CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + map_path + "] with code: " + UTIL_ToString(GetLastError()));
+				CONSOLE_Print("[MAP] warning - unable to load CASC - error code " + UTIL_ToString(GetLastError()));
 		}
-		else
-			CONSOLE_Print("[MAP] warning - unable to load CASC - error code " + UTIL_ToString(GetLastError()));
 	}
 
 	// try to calculate map_size, map_info, map_crc, map_sha1
@@ -312,6 +332,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 	BYTEARRAY MapInfo;
 	BYTEARRAY MapCRC;
 	BYTEARRAY MapSHA1;
+	BYTEARRAY MapHash;
 
 	if( !m_MapData.empty( ) )
 	{
@@ -430,22 +451,28 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 				{
 					vector<string> FileList;
 					FileList.push_back( "war3map.j" );
+					FileList.push_back( "war3map.lua" ); //untested
 					FileList.push_back( "scripts\\war3map.j" );
+					FileList.push_back( "scripts\\war3map.lua");
 					FileList.push_back( "war3map.w3e" );
 					FileList.push_back( "war3map.wpm" );
-					FileList.push_back( "war3map.doo" );
-					FileList.push_back( "war3map.w3u" );
-					FileList.push_back( "war3map.w3b" );
-					FileList.push_back( "war3map.w3d" );
-					FileList.push_back( "war3map.w3a" );
-					FileList.push_back( "war3map.w3q" );
+					if (m_GHost->m_LANWar3Version < 32)
+					//1.32 only uses the 3 files above, but I don't have a hash algorithm for it yet
+					{
+						FileList.push_back( "war3map.doo" );
+						FileList.push_back( "war3map.w3u" );
+						FileList.push_back( "war3map.w3b" );
+						FileList.push_back( "war3map.w3d" );
+						FileList.push_back( "war3map.w3a" );
+						FileList.push_back( "war3map.w3q" );
+					} 
 					bool FoundScript = false;
 
 					for( vector<string> :: iterator i = FileList.begin( ); i != FileList.end( ); ++i )
 					{
 						// don't use scripts\war3map.j if we've already used war3map.j (yes, some maps have both but only war3map.j is used)
 
-						if( FoundScript && *i == "scripts\\war3map.j" )
+						if( FoundScript && (*i == "war3map.lua" || *i == "scripts\\war3map.j" ||  *i == "scripts\\war3map.lua"))
 							continue;
 
 						HANDLE SubFile;
@@ -461,7 +488,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 
 								if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 								{
-									if( *i == "war3map.j" || *i == "scripts\\war3map.j" )
+									if( *i == "war3map.j" || *i == "war3map.lua" || *i == "scripts\\war3map.j" || *i == "scripts\\war3map.lua")
 										FoundScript = true;
 
 									Val = ROTL( Val ^ XORRotateLeft( (unsigned char *)SubFileData, BytesRead ), 3 );
@@ -494,12 +521,20 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 					CONSOLE_Print( "[MAP] calculated map_sha1 = " + UTIL_ByteArrayToDecString( MapSHA1 ) );
 				}
 				else
-					CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1 - map MPQ file not loaded" );
+					CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1/hash - map MPQ file not loaded" );
 			}
 		}
+		m_GHost->m_SHA->Reset();
+		m_GHost->m_SHA->Update((unsigned char*)m_MapData.c_str(), m_MapData.size());
+		m_GHost->m_SHA->Final();
+		unsigned char Hash[20];
+		memset(Hash, 0, sizeof(unsigned char) * 20);
+		m_GHost->m_SHA->GetHash(Hash);
+		MapHash = UTIL_CreateByteArray(Hash, 20);
+		CONSOLE_Print("[MAP] calculated map_hash = " + UTIL_ByteArrayToDecString(MapHash));
 	}
 	else
-		CONSOLE_Print( "[MAP] no map data available, using config file for map_size, map_info, map_crc, map_sha1" );
+		CONSOLE_Print( "[MAP] no map data available, using config file for map_size, map_info, map_crc, map_sha1, map_hash" );
 
 	// try to calculate map_width, map_height, map_slot<x>, map_numplayers, map_numteams
 
@@ -800,8 +835,16 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 		CONSOLE_Print( "[MAP] overriding calculated map_sha1 with config value map_sha1 = " + CFG->GetString( "map_sha1", string( ) ) );
 		MapSHA1 = UTIL_ExtractNumbers( CFG->GetString( "map_sha1", string( ) ), 20 );
 	}
+	if (MapHash.empty())
+		MapHash = UTIL_ExtractNumbers(CFG->GetString("map_hash", string()), 20);
+	else if (CFG->Exists("map_hash"))
+	{
+		CONSOLE_Print("[MAP] overriding calculated map_hash with config value map_hash = " + CFG->GetString("map_hash", string()));
+		MapHash = UTIL_ExtractNumbers(CFG->GetString("map_hash", string()), 20);
+	}
 
 	m_MapSHA1 = MapSHA1;
+	m_MapHash = MapHash;
 	m_MapSpeed = CFG->GetInt( "map_speed", MAPSPEED_FAST );
 	m_MapVisibility = CFG->GetInt( "map_visibility", MAPVIS_DEFAULT );
 	m_MapObservers = CFG->GetInt( "map_observers", MAPOBS_NONE );

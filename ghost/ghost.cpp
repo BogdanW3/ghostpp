@@ -506,7 +506,8 @@ CGHost :: CGHost( CConfig *CFG )
 	m_AutoHostMaximumScore = 0.0;
 	m_AllGamesFinished = false;
 	m_AllGamesFinishedTime = 0;
-	m_TFT = CFG->GetInt( "bot_tft", 1 ) == 0 ? false : true;
+	m_TFT = CFG->GetInt( "bot_tft", 1 ) != 0;
+	m_PTR = CFG->GetInt( "bot_ptr", 1 ) != 0;
 
 	if( m_TFT )
 		CONSOLE_Print( "[GHOST] acting as Warcraft III: The Frozen Throne" );
@@ -514,10 +515,10 @@ CGHost :: CGHost( CConfig *CFG )
 		CONSOLE_Print( "[GHOST] acting as Warcraft III: Reign of Chaos" );
 
 	m_HostPort = CFG->GetInt( "bot_hostport", 6112 );
-	m_Reconnect = CFG->GetInt( "bot_reconnect", 1 ) == 0 ? false : true;
+	m_Reconnect = CFG->GetInt( "bot_reconnect", 1 ) != 0;
 	m_ReconnectPort = CFG->GetInt( "bot_reconnectport", 6114 );
 	m_DefaultMap = CFG->GetString( "bot_defaultmap", "map" );
-	m_AdminGameCreate = CFG->GetInt( "admingame_create", 1 ) == 0 ? false : true;
+	m_AdminGameCreate = CFG->GetInt( "admingame_create", 1 ) != 0;
 	m_AdminGamePort = CFG->GetInt( "admingame_port", 6113 );
 	m_AdminGamePassword = CFG->GetString( "admingame_password", string( ) );
 	m_AdminGameMap = CFG->GetString( "admingame_map", string( ) );
@@ -567,9 +568,9 @@ CGHost :: CGHost( CConfig *CFG )
 		if( BNETCommandTrigger.empty( ) )
 			BNETCommandTrigger = "!";
 
-		bool HoldFriends = CFG->GetInt( Prefix + "holdfriends", 1 ) == 0 ? false : true;
-		bool HoldClan = CFG->GetInt( Prefix + "holdclan", 1 ) == 0 ? false : true;
-		bool PublicCommands = CFG->GetInt( Prefix + "publiccommands", 1 ) == 0 ? false : true;
+		bool HoldFriends = CFG->GetInt( Prefix + "holdfriends", 1 ) != 0;
+		bool HoldClan = CFG->GetInt( Prefix + "holdclan", 1 ) != 0;
+		bool PublicCommands = CFG->GetInt( Prefix + "publiccommands", 1 ) != 0;
 		string BNLSServer = CFG->GetString( Prefix + "bnlsserver", string( ) );
 		int BNLSPort = CFG->GetInt( Prefix + "bnlsport", 9367 );
 		int BNLSWardenCookie = CFG->GetInt( Prefix + "bnlswardencookie", 0 );
@@ -1291,11 +1292,11 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_MapCFGPath = UTIL_AddPathSeperator( CFG->GetString( "bot_mapcfgpath", string( ) ) );
 	m_SaveGamePath = UTIL_AddPathSeperator( CFG->GetString( "bot_savegamepath", string( ) ) );
 	m_MapPath = UTIL_AddPathSeperator( CFG->GetString( "bot_mappath", string( ) ) );
-	m_SaveReplays = CFG->GetInt( "bot_savereplays", 0 ) == 0 ? false : true;
+	m_SaveReplays = CFG->GetInt( "bot_savereplays", 0 ) != 0;
 	m_ReplayPath = UTIL_AddPathSeperator( CFG->GetString( "bot_replaypath", string( ) ) );
 	m_VirtualHostName = CFG->GetString( "bot_virtualhostname", "|cFF4080C0GHost" );
-	m_HideIPAddresses = CFG->GetInt( "bot_hideipaddresses", 0 ) == 0 ? false : true;
-	m_CheckMultipleIPUsage = CFG->GetInt( "bot_checkmultipleipusage", 1 ) == 0 ? false : true;
+	m_HideIPAddresses = CFG->GetInt( "bot_hideipaddresses", 0 ) != 0;
+	m_CheckMultipleIPUsage = CFG->GetInt( "bot_checkmultipleipusage", 1 ) != 0;
 
 	if( m_VirtualHostName.size( ) > 15 )
 	{
@@ -1304,23 +1305,23 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	}
 
 	m_SpoofChecks = CFG->GetInt( "bot_spoofchecks", 2 );
-	m_RequireSpoofChecks = CFG->GetInt( "bot_requirespoofchecks", 0 ) == 0 ? false : true;
-	m_ReserveAdmins = CFG->GetInt( "bot_reserveadmins", 1 ) == 0 ? false : true;
-	m_RefreshMessages = CFG->GetInt( "bot_refreshmessages", 0 ) == 0 ? false : true;
-	m_AutoLock = CFG->GetInt( "bot_autolock", 0 ) == 0 ? false : true;
-	m_AutoSave = CFG->GetInt( "bot_autosave", 0 ) == 0 ? false : true;
+	m_RequireSpoofChecks = CFG->GetInt( "bot_requirespoofchecks", 0 ) != 0;
+	m_ReserveAdmins = CFG->GetInt( "bot_reserveadmins", 1 )!= 0;
+	m_RefreshMessages = CFG->GetInt( "bot_refreshmessages", 0 ) != 0;
+	m_AutoLock = CFG->GetInt( "bot_autolock", 0 ) != 0;
+	m_AutoSave = CFG->GetInt( "bot_autosave", 0 ) != 0;
 	m_AllowDownloads = CFG->GetInt( "bot_allowdownloads", 0 );
-	m_PingDuringDownloads = CFG->GetInt( "bot_pingduringdownloads", 0 ) == 0 ? false : true;
+	m_PingDuringDownloads = CFG->GetInt( "bot_pingduringdownloads", 0 ) != 0;
 	m_MaxDownloaders = CFG->GetInt( "bot_maxdownloaders", 3 );
 	m_MaxDownloadSpeed = CFG->GetInt( "bot_maxdownloadspeed", 100 );
-	m_LCPings = CFG->GetInt( "bot_lcpings", 1 ) == 0 ? false : true;
+	m_LCPings = CFG->GetInt( "bot_lcpings", 1 ) != 0;
 	m_AutoKickPing = CFG->GetInt( "bot_autokickping", 400 );
 	m_BanMethod = CFG->GetInt( "bot_banmethod", 1 );
 	m_IPBlackListFile = CFG->GetString( "bot_ipblacklistfile", "ipblacklist.txt" );
 	m_LobbyTimeLimit = CFG->GetInt( "bot_lobbytimelimit", 10 );
 	m_Latency = CFG->GetInt( "bot_latency", 100 );
 	m_SyncLimit = CFG->GetInt( "bot_synclimit", 50 );
-	m_VoteKickAllowed = CFG->GetInt( "bot_votekickallowed", 1 ) == 0 ? false : true;
+	m_VoteKickAllowed = CFG->GetInt( "bot_votekickallowed", 1 ) != 0;
 	m_VoteKickPercentage = CFG->GetInt( "bot_votekickpercentage", 100 );
 
 	if( m_VoteKickPercentage > 100 )
@@ -1332,8 +1333,8 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_MOTDFile = CFG->GetString( "bot_motdfile", "motd.txt" );
 	m_GameLoadedFile = CFG->GetString( "bot_gameloadedfile", "gameloaded.txt" );
 	m_GameOverFile = CFG->GetString( "bot_gameoverfile", "gameover.txt" );
-	m_LocalAdminMessages = CFG->GetInt( "bot_localadminmessages", 1 ) == 0 ? false : true;
-	m_TCPNoDelay = CFG->GetInt( "tcp_nodelay", 0 ) == 0 ? false : true;
+	m_LocalAdminMessages = CFG->GetInt( "bot_localadminmessages", 1 ) != 0;
+	m_TCPNoDelay = CFG->GetInt( "tcp_nodelay", 0 ) != 0;
 	m_MatchMakingMethod = CFG->GetInt( "bot_matchmakingmethod", 1 );
 	m_MapGameType = CFG->GetUInt32( "bot_mapgametype", 0 );
 }
@@ -1344,7 +1345,8 @@ void CGHost :: ExtractScripts( )
 	{
 		HANDLE Casc;
 		wchar_t WWarcraft3Path[255];
-		mbstowcs(WWarcraft3Path, m_Warcraft3Path.c_str(), 255);
+		std::string CascPath = m_Warcraft3Path + (m_PTR ? ":w3t" : "w3");
+		mbstowcs(WWarcraft3Path, CascPath.c_str(), 255);
 		if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
 		{
 			CONSOLE_Print("[GHOST] loading CASC");
@@ -1352,7 +1354,7 @@ void CGHost :: ExtractScripts( )
 
 			// common.j
 
-			if (CascOpenFile(Casc, m_LANWar3Version == 30 ? "war3.mpq:Scripts\\common.j" : "war3.w3mod:Scripts\\common.j", 0, CASC_OPEN_BY_NAME, &SubFile))
+			if (CascOpenFile(Casc, ((m_LANWar3Version == 30) ? "war3.mpq:Scripts\\common.j" : "war3.w3mod:Scripts\\common.j"), 0, CASC_OPEN_BY_NAME, &SubFile))
 			{
 				uint32_t FileLength = CascGetFileSize(SubFile, NULL);
 

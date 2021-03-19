@@ -98,6 +98,7 @@ public:
 	string m_LanguageFile;					// config value: language file
 	string m_Warcraft3Path;					// config value: Warcraft 3 path
 	bool m_TFT;								// config value: TFT enabled or not
+	bool m_PTR;								// config value: PTR files or not
 	string m_BindAddress;					// config value: the address to host games on
 	uint16_t m_HostPort;					// config value: the port to host games on
 	bool m_Reconnect;						// config value: GProxy++ reliable reconnects enabled or not
