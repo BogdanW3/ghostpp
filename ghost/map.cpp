@@ -265,7 +265,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 			HANDLE MPQFile;
 			CONSOLE_Print("[MAP] loading MPQ from CASC");
 			std::string map_path = CFG->GetString("map_path", string());
-			if (CascOpenFile(Casc, (std::string("war3.w3mod:") + map_path).c_str(), 0, CASC_OPEN_BY_NAME, &MPQFile))
+			if (CascOpenFile(Casc, (std::string((m_GHost->m_LANWar3Version == 30 ? "enus-" : "war3.w3mod:")) + map_path).c_str(), 0, CASC_OPEN_BY_NAME, &MPQFile))
 			{
 				uint32_t FileLength = CascGetFileSize(MPQFile, NULL);
 
@@ -300,7 +300,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 				}
 			}
 			else
-				CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + map_path + "]");
+				CONSOLE_Print("[MAP] warning - unable to load MPQ file [" + map_path + "] with code: " + UTIL_ToString(GetLastError()));
 		}
 		else
 			CONSOLE_Print("[MAP] warning - unable to load CASC - error code " + UTIL_ToString(GetLastError()));
@@ -611,54 +611,55 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 							ISS.read( (char *)&RawMapNumPlayers, 4 );	// number of players
 							uint32_t ClosedSlots = 0;
 
-							for( uint32_t i = 0; i < RawMapNumPlayers; ++i )
+							for (uint32_t i = 0; i < RawMapNumPlayers; ++i)
 							{
-								CGameSlot Slot( 0, 255, SLOTSTATUS_OPEN, 0, 0, 1, SLOTRACE_RANDOM );
+								CGameSlot Slot(0, 255, SLOTSTATUS_OPEN, 0, 0, 1, SLOTRACE_RANDOM);
 								uint32_t Colour;
 								uint32_t Status;
 								uint32_t Race;
 
-								ISS.read( (char *)&Colour, 4 );			// colour
-								Slot.SetColour( Colour );
-								ISS.read( (char *)&Status, 4 );			// status
+								ISS.read((char*)&Colour, 4);			// colour
+								Slot.SetColour(Colour);
+								ISS.read((char*)&Status, 4);			// status
 
-								if( Status == 1 )
-									Slot.SetSlotStatus( SLOTSTATUS_OPEN );
-								else if( Status == 2 )
+								if (Status == 1)
+									Slot.SetSlotStatus(SLOTSTATUS_OPEN);
+								else if (Status == 2)
 								{
-									Slot.SetSlotStatus( SLOTSTATUS_OCCUPIED );
-									Slot.SetComputer( 1 );
-									Slot.SetComputerType( SLOTCOMP_NORMAL );
+									Slot.SetSlotStatus(SLOTSTATUS_OCCUPIED);
+									Slot.SetComputer(1);
+									Slot.SetComputerType(SLOTCOMP_NORMAL);
 								}
 								else
 								{
-									Slot.SetSlotStatus( SLOTSTATUS_CLOSED );
+									Slot.SetSlotStatus(SLOTSTATUS_CLOSED);
 									++ClosedSlots;
 								}
 
-								ISS.read( (char *)&Race, 4 );			// race
+								ISS.read((char*)&Race, 4);			// race
 
-								if( Race == 1 )
-									Slot.SetRace( SLOTRACE_HUMAN );
-								else if( Race == 2 )
-									Slot.SetRace( SLOTRACE_ORC );
-								else if( Race == 3 )
-									Slot.SetRace( SLOTRACE_UNDEAD );
-								else if( Race == 4 )
-									Slot.SetRace( SLOTRACE_NIGHTELF );
+								if (Race == 1)
+									Slot.SetRace(SLOTRACE_HUMAN);
+								else if (Race == 2)
+									Slot.SetRace(SLOTRACE_ORC);
+								else if (Race == 3)
+									Slot.SetRace(SLOTRACE_UNDEAD);
+								else if (Race == 4)
+									Slot.SetRace(SLOTRACE_NIGHTELF);
 								else
-									Slot.SetRace( SLOTRACE_RANDOM );
+									Slot.SetRace(SLOTRACE_RANDOM);
 
-								ISS.seekg( 4, ios :: cur );				// fixed start position
-								getline( ISS, GarbageString, '\0' );	// player name
-								ISS.seekg( 4, ios :: cur );				// start position x
-								ISS.seekg( 4, ios :: cur );				// start position y
-								ISS.seekg( 4, ios :: cur );				// ally low priorities
-								ISS.seekg( 4, ios :: cur );				// ally high priorities
+								ISS.seekg(4, ios::cur);				// fixed start position
+								getline(ISS, GarbageString, '\0');	// player name
+								ISS.seekg(4, ios::cur);				// start position x
+								ISS.seekg(4, ios::cur);				// start position y
+								ISS.seekg(4, ios::cur);				// ally low priorities
+								ISS.seekg(4, ios::cur);				// ally high priorities
 								if (FileFormat >= 31)
-									ISS.seekg( 4, ios :: cur);			// enemy low priorities
-									ISS.seekg( 4, ios :: cur);			// evemy high priorities
-
+								{
+									ISS.seekg(4, ios::cur);			// enemy low priorities
+									ISS.seekg(4, ios::cur);			// evemy high priorities
+								}
 								if( Slot.GetSlotStatus( ) != SLOTSTATUS_CLOSED )
 									Slots.push_back( Slot );
 							}

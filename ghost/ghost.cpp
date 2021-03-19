@@ -1352,7 +1352,7 @@ void CGHost :: ExtractScripts( )
 
 			// common.j
 
-			if (CascOpenFile(Casc, "war3.w3mod:Scripts\\common.j", 0, CASC_OPEN_BY_NAME, &SubFile))
+			if (CascOpenFile(Casc, m_LANWar3Version == 30 ? "war3.mpq:Scripts\\common.j" : "war3.w3mod:Scripts\\common.j", 0, CASC_OPEN_BY_NAME, &SubFile))
 			{
 				uint32_t FileLength = CascGetFileSize(SubFile, NULL);
 
@@ -1379,7 +1379,7 @@ void CGHost :: ExtractScripts( )
 
 			// blizzard.j
 
-			if (CascOpenFile(Casc, "war3.w3mod:Scripts\\blizzard.j", 0, CASC_OPEN_BY_NAME, &SubFile))
+			if (CascOpenFile(Casc, m_LANWar3Version == 30 ? "war3.mpq:Scripts\\blizzard.j" : "war3.w3mod:Scripts\\blizzard.j", 0, CASC_OPEN_BY_NAME, &SubFile))
 			{
 				uint32_t FileLength = CascGetFileSize(SubFile, NULL);
 
