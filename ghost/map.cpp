@@ -693,7 +693,7 @@ void CMap::Load(CConfig* CFG, string nCFGFile)
 								if (FileFormat >= 31)
 								{
 									ISS.seekg(4, ios::cur);			// enemy low priorities
-									ISS.seekg(4, ios::cur);			// evemy high priorities
+									ISS.seekg(4, ios::cur);			// enemy high priorities
 								}
 								if( Slot.GetSlotStatus( ) != SLOTSTATUS_CLOSED )
 									Slots.push_back( Slot );

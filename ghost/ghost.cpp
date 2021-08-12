@@ -1345,7 +1345,7 @@ void CGHost :: ExtractScripts( )
 	{
 		HANDLE Casc;
 		wchar_t WWarcraft3Path[255];
-		std::string CascPath = m_Warcraft3Path + (m_PTR ? ":w3t" : "w3");
+		std::string CascPath = m_Warcraft3Path + (m_PTR ? ":w3t" : "");
 		mbstowcs(WWarcraft3Path, CascPath.c_str(), 255);
 		if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
 		{
