@@ -20,12 +20,25 @@ CBonjour :: ~CBonjour()
 
 void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY mapGameType, BYTEARRAY mapFlags, BYTEARRAY mapWidth, BYTEARRAY mapHeight, string gameName, string hostName, uint32_t hostTime, string mapPath, BYTEARRAY mapCRC, uint32_t slotsTotal, uint32_t slotsOpen, uint16_t port, uint32_t hostCounter, uint32_t entryKey, BYTEARRAY mapSHA1)
 {
-
+	bool exists = false;
+	for ( auto i = games.begin(); i != games.end(); i++)
+		if (std::get<1>(*i) == gameName)
+		{
+			std::get<2>(*i) = GetTime();
+			exists = true;
+		}
+		else
+			if (std::get<2>(*i) < (GetTime() - 6))
+			{
+				DNSServiceRefDeallocate(std::get<0>(*i));
+				games.erase(i--);
+			}
+	if (exists) return;
 	DNSServiceRef service1 = client;
 	std::string tmp = std::string("_blizzard._udp") + (TFT ? ",_w3xp27" : ",_war327") + UTIL_ToHexString(war3Version + 16);
 	const char* temp = tmp.c_str();
 	int err = DNSServiceRegister(&service1, kDNSServiceFlagsShareConnection, kDNSServiceInterfaceIndexAny, gameName.c_str(),
-		temp, "local", NULL, ntohs(8151), 0, NULL, nullptr, NULL);
+		temp, "local", NULL, ntohs(8152), 0, NULL, nullptr, NULL);
 	if (err) CONSOLE_Print("[MDNS] DNSServiceRegister 1 failed: " + UTIL_ToString(err) + "\n");
 
 	std::string players_num = UTIL_ToString(1);
@@ -73,7 +86,7 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 	std::string game_data = base64_encode((unsigned char*)game_data_d.c_str(), game_data_d.size());
 
 	std::string w66;
-	if (war3Version != 30)
+	/*if (war3Version != 30)*/
 		w66	= std::string("\x0A") + ((char)gameName.size()) + gameName + std::string("\x10\0", 2) +
 		"\x1A" + (char)(15 + players_num.size()) + "\x0A\x0Bplayers_num\x12" + (char)players_num.size() + players_num +
 		"\x1A" + (char)(9 + gameName.size()) + "\x0A\x05_name\x12" + (char)gameName.size() + gameName +
@@ -84,7 +97,7 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 		"\x1A" + (char)(14 + game_data.size()) + "\x01\x0A\x09game_data\x12" + (char)game_data.size() + "\x01" + game_data +
 		"\x1A\x0C\x0A\x07game_id\x12\x01" + ((war3Version == 32) ? "1":"2") +
 		"\x1A\x0B\x0A\x06_flags\x12\x01\x30";
-	else
+	/*else
 		w66 = std::string("\x0A") + ((char)gameName.size()) + gameName + std::string("\x10\0", 2) +
 		"\x1A" + (char)(15 + secret.size()) + "\x0A\x0Bgame_secret\x12" + (char)secret.size() + secret +
 		"\x1A\x0A\x0A\x05_type\x12\x01\x31" + "\x1A\x0D\x0A\x08_subtype\x12\x01\x30" +
@@ -95,9 +108,10 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 		"\x1A" + (char)(15 + players_num.size()) + "\x0A\x0Bplayers_num\x12" + (char)players_num.size() + players_num +
 		"\x1A" + (char)(20 + time.size()) + "\x0A\x10game_create_time\x12" + (char)time.size() + time +
 		"\x1A" + (char)(14 + game_data.size()) + "\x01\x0A\x09game_data\x12" + (char)game_data.size() + "\x01" + game_data;
-	
+	*/
 	DNSRecordRef record;
 	err = DNSServiceAddRecord(service1, &record, 0, 66, w66.size(), w66.c_str(), 0);
 	if (err) CONSOLE_Print("[MDNS] DNSServiceAddRecord 1 failed: " + UTIL_ToString(err) + "\n");
+	else games.emplace_back(service1, gameName, GetTime());
 	return;
 }

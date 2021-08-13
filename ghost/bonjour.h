@@ -3,12 +3,16 @@
 
 #include "includes.h"
 #include "dns_sd.h"
+#include <vector>
+#include <tuple>
+
 //
 // CBonjour
 //
 
 class CBonjour
 {
+	std::vector<std::tuple<DNSServiceRef, std::string, uint32_t>> games;
 public:
 	DNSServiceRef client = NULL;
 	CBonjour();
