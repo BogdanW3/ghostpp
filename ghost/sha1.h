@@ -25,11 +25,11 @@
 
 // standard integer sizes for 64 bit compatibility
 
-#ifdef _MSC_VER
+/*#ifdef _MSC_VER
  #include "ms_stdint.h"
-#else
+#else*/
  #include <stdint.h>
-#endif
+//#endif
 
 #define MAX_FILE_READ_BUFFER 8000
 

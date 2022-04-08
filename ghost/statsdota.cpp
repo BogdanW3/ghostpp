@@ -86,8 +86,8 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 						// the 4 byte integer should be the value
 
 						Value = BYTEARRAY( ActionData->begin( ) + i + 8 + Data.size( ) + Key.size( ), ActionData->begin( ) + i + 12 + Data.size( ) + Key.size( ) );
-						string DataString = string( Data.begin( ), Data.end( ) );
-						string KeyString = string( Key.begin( ), Key.end( ) );
+						std::string DataString = std::string( Data.begin( ), Data.end( ) );
+						std::string KeyString = std::string( Key.begin( ), Key.end( ) );
 						uint32_t ValueInt = UTIL_ByteArrayToUInt32( Value, false );
 
 						// CONSOLE_Print( "[STATS] " + DataString + ", " + KeyString + ", " + UTIL_ToString( ValueInt ) );
@@ -102,7 +102,7 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 							{
 								// a hero died
 
-								string VictimColourString = KeyString.substr( 4 );
+								std::string VictimColourString = KeyString.substr( 4 );
 								uint32_t VictimColour = UTIL_ToUInt32( VictimColourString );
 								CGamePlayer *Killer = m_Game->GetPlayerFromColour( ValueInt );
 								CGamePlayer *Victim = m_Game->GetPlayerFromColour( VictimColour );
@@ -129,7 +129,7 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 									m_Players[ValueInt]->SetCourierKills( m_Players[ValueInt]->GetCourierKills( ) + 1 );
 								}
 
-								string VictimColourString = KeyString.substr( 7 );
+								std::string VictimColourString = KeyString.substr( 7 );
 								uint32_t VictimColour = UTIL_ToUInt32( VictimColourString );
 								CGamePlayer *Killer = m_Game->GetPlayerFromColour( ValueInt );
 								CGamePlayer *Victim = m_Game->GetPlayerFromColour( VictimColour );
@@ -156,12 +156,12 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 									m_Players[ValueInt]->SetTowerKills( m_Players[ValueInt]->GetTowerKills( ) + 1 );
 								}
 
-								string Alliance = KeyString.substr( 5, 1 );
-								string Level = KeyString.substr( 6, 1 );
-								string Side = KeyString.substr( 7, 1 );
+								std::string Alliance = KeyString.substr( 5, 1 );
+								std::string Level = KeyString.substr( 6, 1 );
+								std::string Side = KeyString.substr( 7, 1 );
 								CGamePlayer *Killer = m_Game->GetPlayerFromColour( ValueInt );
-								string AllianceString;
-								string SideString;
+								std::string AllianceString;
+								std::string SideString;
 
 								if( Alliance == "0" )
 									AllianceString = "Sentinel";
@@ -201,13 +201,13 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 									m_Players[ValueInt]->SetRaxKills( m_Players[ValueInt]->GetRaxKills( ) + 1 );
 								}
 
-								string Alliance = KeyString.substr( 3, 1 );
-								string Side = KeyString.substr( 4, 1 );
-								string Type = KeyString.substr( 5, 1 );
+								std::string Alliance = KeyString.substr( 3, 1 );
+								std::string Side = KeyString.substr( 4, 1 );
+								std::string Type = KeyString.substr( 5, 1 );
 								CGamePlayer *Killer = m_Game->GetPlayerFromColour( ValueInt );
-								string AllianceString;
-								string SideString;
-								string TypeString;
+								std::string AllianceString;
+								std::string SideString;
+								std::string TypeString;
 
 								if( Alliance == "0" )
 									AllianceString = "Sentinel";
@@ -282,7 +282,7 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 							else if( KeyString == "s" )
 								m_Sec = ValueInt;
 						}
-						else if( DataString.size( ) <= 2 && DataString.find_first_not_of( "1234567890" ) == string :: npos )
+						else if( DataString.size( ) <= 2 && DataString.find_first_not_of( "1234567890" ) == std::string :: npos )
 						{
 							// these are only received at the end of the game
 
@@ -326,19 +326,19 @@ bool CStatsDOTA :: ProcessAction( CIncomingAction *Action )
 								else if( KeyString == "7" )
 									m_Players[ID]->SetNeutralKills( ValueInt );
 								else if( KeyString == "8_0" )
-									m_Players[ID]->SetItem( 0, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 0, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "8_1" )
-									m_Players[ID]->SetItem( 1, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 1, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "8_2" )
-									m_Players[ID]->SetItem( 2, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 2, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "8_3" )
-									m_Players[ID]->SetItem( 3, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 3, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "8_4" )
-									m_Players[ID]->SetItem( 4, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 4, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "8_5" )
-									m_Players[ID]->SetItem( 5, string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetItem( 5, std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "9" )
-									m_Players[ID]->SetHero( string( Value.rbegin( ), Value.rend( ) ) );
+									m_Players[ID]->SetHero(std::string( Value.rbegin( ), Value.rend( ) ) );
 								else if( KeyString == "id" )
 								{
 									// DotA sends id values from 1-10 with 1-5 being sentinel players and 6-10 being scourge players

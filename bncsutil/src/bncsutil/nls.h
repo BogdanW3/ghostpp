@@ -58,8 +58,8 @@ MEXP(nls_t*) nls_init(const char* username, const char* password);
  * Returns a NULL pointer on failure.
  * (Lengths do not include the null-terminator.)
  */
-MEXP(nls_t*) nls_init_l(const char* username, unsigned long username_length,
-    const char* password, unsigned long password_length);
+MEXP(nls_t*) nls_init_l(const char* username, size_t username_length,
+    const char* password, size_t password_length);
 
 /**
  * Frees an nls_t structure.
@@ -91,7 +91,7 @@ MEXP(nls_t*) nls_reinit_l(nls_t* nls, const char* username,
  * bufSize should be the size of buf.
  * Returns the number of bytes placed in buf, or 0 on error.
  */
-MEXP(unsigned long) nls_account_create(nls_t* nls, char* buf, unsigned long bufSize);
+MEXP(size_t) nls_account_create(nls_t* nls, char* buf, unsigned long bufSize);
 
 /**
  * [ DEPRECATED ] Uses the internal username buffer when
@@ -103,7 +103,7 @@ MEXP(unsigned long) nls_account_create(nls_t* nls, char* buf, unsigned long bufS
  * bufSize should be size of buf.
  * Returns the number of bytes placed in buf, or 0 on error.
  */
-MEXP(unsigned long) nls_account_logon(nls_t* nls, char* buf, unsigned long bufSize);
+MEXP(size_t) nls_account_logon(nls_t* nls, char* buf, unsigned long bufSize);
 
 /**
  * NOTE

@@ -33,7 +33,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <cstdlib>
 #include "csvparser.h"
-using namespace std;
 
 
 CSVParser::CSVParser() : m_sData( "" ), m_nPos( 0 )
@@ -47,7 +46,7 @@ void CSVParser::SkipSpaces(void)
     m_nPos++;
 }
 
-const CSVParser & CSVParser::operator <<(const string & sIn)
+const CSVParser & CSVParser::operator <<(const std::string & sIn)
 {
   this->m_sData = sIn;
   this->m_nPos = 0;
@@ -63,37 +62,37 @@ const CSVParser & CSVParser::operator <<(const char *sIn)
 
 CSVParser & CSVParser::operator >>(int & nOut)
 {
-  string sTmp = "";
-  SkipSpaces();
-  while (m_nPos < m_sData.length() && m_sData[m_nPos] != ',')
+    std::string sTmp = "";
+    SkipSpaces();
+    while (m_nPos < m_sData.length() && m_sData[m_nPos] != ',')
     sTmp += m_sData[m_nPos++];
 
-  ++m_nPos; // skip past comma
-  nOut = atoi(sTmp.c_str());
-  return *this;
+    ++m_nPos; // skip past comma
+    nOut = atoi(sTmp.c_str());
+    return *this;
 }
 
 CSVParser & CSVParser::operator >>(double & nOut)
 {
-  string sTmp = "";
-  SkipSpaces();
-  while (m_nPos < m_sData.length() && m_sData[m_nPos] != ',')
+    std::string sTmp = "";
+    SkipSpaces();
+    while (m_nPos < m_sData.length() && m_sData[m_nPos] != ',')
     sTmp += m_sData[m_nPos++];
 
-  ++m_nPos; // skip past comma
-  nOut = atof(sTmp.c_str());
-  return *this;
+    ++m_nPos; // skip past comma
+    nOut = atof(sTmp.c_str());
+    return *this;
 }
 
-CSVParser & CSVParser::operator >>(string & sOut)
+CSVParser & CSVParser::operator >>(std::string & sOut)
 {
-  bool bQuotes = false;
-  sOut = "";
-  SkipSpaces();
+    bool bQuotes = false;
+    sOut = "";
+    SkipSpaces();
 
-  // Jump past first " if necessary
-  if (m_nPos < m_sData.length() && m_sData[m_nPos] == '"') {
-    bQuotes = true;
+    // Jump past first " if necessary
+    if (m_nPos < m_sData.length() && m_sData[m_nPos] == '"') {
+        bQuotes = true;
     ++m_nPos; 
   }
   

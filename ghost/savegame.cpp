@@ -56,7 +56,7 @@ void CSaveGame :: ParseSaveGame( )
 		return;
 	}
 
-	istringstream ISS( m_Decompressed );
+	std::istringstream ISS( m_Decompressed );
 
 	// savegame format figured out by Varlock:
 	// string		-> map path
@@ -73,7 +73,7 @@ void CSaveGame :: ParseSaveGame( )
 	unsigned char Garbage1;
 	uint16_t Garbage2;
 	uint32_t Garbage4;
-	string GarbageString;
+	std::string GarbageString;
 	uint32_t MagicNumber;
 
 	READSTR( ISS, m_MapPath );				// map path

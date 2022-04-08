@@ -43,10 +43,10 @@
 #include <vector>
 #include <boost/thread.hpp>
 
-using namespace std;
+//using namespace std;
 
-typedef vector<unsigned char> BYTEARRAY;
-typedef pair<unsigned char,string> PIDPlayer;
+typedef std::vector<unsigned char> BYTEARRAY;
+typedef std::pair<unsigned char, std::string> PIDPlayer;
 
 // time
 
@@ -66,8 +66,8 @@ uint32_t GetTicks( );		// milliseconds
 
 // output
 
-void CONSOLE_Print( string message );
-void DEBUG_Print( string message );
+void CONSOLE_Print(std::string message );
+void DEBUG_Print(std::string message );
 void DEBUG_Print( BYTEARRAY b );
 
 #endif

@@ -28,7 +28,7 @@
 // CBNCSUtilInterface
 //
 
-CBNCSUtilInterface :: CBNCSUtilInterface( string userName, string userPassword )
+CBNCSUtilInterface :: CBNCSUtilInterface(std::string userName, std::string userPassword )
 {
 	// m_nls = (void *)nls_init( userName.c_str( ), userPassword.c_str( ) );
 	m_NLS = new NLS( userName, userPassword );
@@ -40,7 +40,7 @@ CBNCSUtilInterface :: ~CBNCSUtilInterface( )
 	delete (NLS *)m_NLS;
 }
 
-void CBNCSUtilInterface :: Reset( string userName, string userPassword )
+void CBNCSUtilInterface :: Reset(std::string userName, std::string userPassword )
 {
 	// nls_free( (nls_t *)m_nls );
 	// m_nls = (void *)nls_init( userName.c_str( ), userPassword.c_str( ) );
@@ -48,11 +48,11 @@ void CBNCSUtilInterface :: Reset( string userName, string userPassword )
 	m_NLS = new NLS( userName, userPassword );
 }
 
-bool CBNCSUtilInterface :: HELP_SID_AUTH_CHECK( bool TFT, bool PTR, uint32_t war3Version, string war3Path, string keyROC, string keyTFT, string valueStringFormula, string mpqFileName, BYTEARRAY clientToken, BYTEARRAY serverToken )
+bool CBNCSUtilInterface :: HELP_SID_AUTH_CHECK( bool TFT, bool PTR, uint32_t war3Version, std::string war3Path, std::string keyROC, std::string keyTFT, std::string valueStringFormula, std::string mpqFileName, BYTEARRAY clientToken, BYTEARRAY serverToken )
 {
 	// set m_EXEVersion, m_EXEVersionHash, m_EXEInfo, m_InfoROC, m_InfoTFT
 
-	string FileWar3EXE = war3Path + (PTR ? "_ptr_" : "_retail_") + "\\x86_64\\Warcraft III.exe";
+	std::string FileWar3EXE = war3Path + (PTR ? "_ptr_" : "_retail_") + "\\x86_64\\Warcraft III.exe";
 
 	if (!UTIL_FileExists(FileWar3EXE))
 		FileWar3EXE = war3Path + "x86_64\\Warcraft III.exe";
@@ -71,7 +71,7 @@ bool CBNCSUtilInterface :: HELP_SID_AUTH_CHECK( bool TFT, bool PTR, uint32_t war
 		MissingFile = true;
 	}
 
-	string FileStormDLL, FileGameDLL;
+	std::string FileStormDLL, FileGameDLL;
 
 	if( war3Version <= 28 )
 	{
@@ -108,7 +108,7 @@ bool CBNCSUtilInterface :: HELP_SID_AUTH_CHECK( bool TFT, bool PTR, uint32_t war
 	unsigned long EXEVersionHash;
 
 	// for war3version <= 28, we use war3.exe, storm.dll, and game.dll
-	// for war3version == 29, we use Warcraft III.exe only
+	// for war3version >= 29, we use Warcraft III.exe only
 	if( war3Version <= 28 )
 	{
 		checkRevisionFlat( valueStringFormula.c_str( ), FileWar3EXE.c_str( ), FileStormDLL.c_str( ), FileGameDLL.c_str( ), extractMPQNumber( mpqFileName.c_str( ) ), (unsigned long *)&EXEVersionHash );
@@ -156,12 +156,12 @@ bool CBNCSUtilInterface :: HELP_SID_AUTH_ACCOUNTLOGONPROOF( BYTEARRAY salt, BYTE
 
 	char buf[20];
 	// nls_get_M1( (nls_t *)m_nls, buf, string( serverKey.begin( ), serverKey.end( ) ).c_str( ), string( salt.begin( ), salt.end( ) ).c_str( ) );
-	( (NLS *)m_NLS )->getClientSessionKey( buf, string( salt.begin( ), salt.end( ) ).c_str( ), string( serverKey.begin( ), serverKey.end( ) ).c_str( ) );
+	( (NLS *)m_NLS )->getClientSessionKey( buf, std::string( salt.begin( ), salt.end( ) ).c_str( ), std::string( serverKey.begin( ), serverKey.end( ) ).c_str( ) );
 	m_M1 = UTIL_CreateByteArray( (unsigned char *)buf, 20 );
 	return true;
 }
 
-bool CBNCSUtilInterface :: HELP_PvPGNPasswordHash( string userPassword )
+bool CBNCSUtilInterface :: HELP_PvPGNPasswordHash(std::string userPassword )
 {
 	// set m_PvPGNPasswordHash
 
@@ -171,7 +171,7 @@ bool CBNCSUtilInterface :: HELP_PvPGNPasswordHash( string userPassword )
 	return true;
 }
 
-BYTEARRAY CBNCSUtilInterface :: CreateKeyInfo( string key, uint32_t clientToken, uint32_t serverToken )
+BYTEARRAY CBNCSUtilInterface :: CreateKeyInfo(std::string key, uint32_t clientToken, uint32_t serverToken )
 {
 	unsigned char Zeros[] = { 0, 0, 0, 0 };
 	BYTEARRAY KeyInfo;

@@ -34,8 +34,8 @@
 struct _nls {
     const char* username;
     const char* password;
-    unsigned long username_len;
-    unsigned long password_len;
+    size_t username_len;
+    size_t password_len;
     
     mpz_t n;
     mpz_t a;
@@ -98,8 +98,8 @@ MEXP(nls_t*) nls_init(const char* username, const char* password) {
 		password, (unsigned long) strlen(password));
 }
 
-MEXP(nls_t*) nls_init_l(const char* username, unsigned long username_length,
-    const char* password, unsigned long password_length)
+MEXP(nls_t*) nls_init_l(const char* username, size_t username_length,
+    const char* password, size_t password_length)
 {
     unsigned int i;
     char* d; /* destination */
@@ -254,7 +254,7 @@ MEXP(nls_t*) nls_reinit_l(nls_t* nls, const char* username,
 	return nls;
 }
 
-MEXP(unsigned long) nls_account_create(nls_t* nls, char* buf, unsigned long bufSize) {
+MEXP(size_t) nls_account_create(nls_t* nls, char* buf, unsigned long bufSize) {
 	mpz_t s; /* salt */
     mpz_t v;
     mpz_t x;
@@ -281,7 +281,7 @@ MEXP(unsigned long) nls_account_create(nls_t* nls, char* buf, unsigned long bufS
     return nls->username_len + 65;
 }
 
-MEXP(unsigned long) nls_account_logon(nls_t* nls, char* buf, unsigned long bufSize) {
+MEXP(size_t) nls_account_logon(nls_t* nls, char* buf, unsigned long bufSize) {
     if (!nls)
         return 0;
     if (bufSize < nls->username_len + 33)
@@ -478,7 +478,7 @@ MEXP(void) nls_get_M1(nls_t* nls, char* out, const char* B, const char* salt) {
 
     /* calculate SHA-1 hash of username */
     SHA1Reset(&sha);
-    SHA1Input(&sha, (uint8_t*) nls->username, nls->username_len);
+    SHA1Input(&sha, (uint8_t*) nls->username, (uint16_t)nls->username_len);
     SHA1Result(&sha, username_hash);
 
     
@@ -552,7 +552,7 @@ MEXP(int) nls_check_M2(nls_t* nls, const char* var_M2, const char* B,
 
 		/* calculate SHA-1 hash of username */
 		SHA1Reset(&sha);
-		SHA1Input(&sha, (uint8_t*) nls->username, nls->username_len);
+		SHA1Input(&sha, (uint8_t*) nls->username, (uint16_t)nls->username_len);
 		SHA1Result(&sha, username_hash);
 	    
 		/* calculate M[1] */
@@ -684,7 +684,7 @@ void nls_get_x(nls_t* nls, mpz_t x_c, const char* raw_salt) {
     // get the SHA-1 hash of the string
     SHA1Reset(&shac);
     SHA1Input(&shac, (uint8_t*) userpass,
-        (nls->username_len + nls->password_len + 1));
+        (uint16_t)(nls->username_len + nls->password_len + 1));
     SHA1Result(&shac, hash);
     free(userpass);
     
