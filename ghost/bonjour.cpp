@@ -13,7 +13,7 @@ CBonjour :: CBonjour(std::string interfs)
 	err = DNSServiceCreateConnection(&client);
 	if (err) CONSOLE_Print("[MDNS] DNSServiceCreateConnection 0 failed: " + UTIL_ToString(err) + "\n");
 
-	CONSOLE_Print("[MDNS] DNS registration finished\n");
+	CONSOLE_Print("[MDNS] DNS registration finished");
 }
 CBonjour :: ~CBonjour()
 {
@@ -43,7 +43,7 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 			}
 	if (!exists)
 	{
-		std::string tmp = std::string("_blizzard._udp") + (TFT ? ",_w3xp27" : ",_war327") + UTIL_ToHexString(war3Version + 16);
+		std::string tmp = std::string("_blizzard._udp") + (TFT ? ",_w3xp" : ",_war3") + UTIL_ToHexString(war3Version + 10000);
 		const char* temp = tmp.c_str();
 		
 		/*if (strncmp(gameName.c_str(), "GHost++ Admin Game", 18) == 0)

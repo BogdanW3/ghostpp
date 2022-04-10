@@ -37,6 +37,7 @@
 #include <cmath>
 #include <cstring>
 #include <ctime>
+#include <filesystem>
 #include <random>
 
 #include "next_combination.h"
@@ -254,7 +255,8 @@ void CBaseGame :: loop( )
 		if( SecString.size( ) == 1 )
 			SecString.insert( 0, "0" );
 
-		m_Replay->BuildReplay( m_GameName, m_StatString, m_GHost->m_ReplayWar3Version, m_GHost->m_ReplayBuildNumber );
+		m_Replay->BuildReplay( m_GameName, m_StatString, m_GHost->m_ReplayWar3Version + m_GHost->m_LANBonjour*10000, m_GHost->m_ReplayBuildNumber );
+		std::filesystem::create_directories(m_GHost->m_ReplayPath);
 		m_Replay->Save( m_GHost->m_TFT, m_GHost->m_ReplayPath + UTIL_FileSafeName( "GHost++ " + std::string( Time ) + " " + m_GameName + " (" + MinString + "m" + SecString + "s).w3g" ) );
 	}
 
