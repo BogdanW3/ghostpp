@@ -164,6 +164,7 @@ public:
 	void Load( CConfig *CFG, std::string nCFGFile );
 	void CheckValid( );
 	uint32_t XORRotateLeft( unsigned char *data, uint32_t length );
+	uint32_t ChunkedChecksum(unsigned char* data, int32_t length, uint32_t checksum);
 };
 
 #endif

@@ -454,28 +454,24 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 				{
 					std::vector<std::string> FileList;
 					FileList.push_back( "war3map.j" );
-					FileList.push_back( "war3map.lua" ); //untested
 					FileList.push_back( "scripts\\war3map.j" );
-					FileList.push_back( "scripts\\war3map.lua");
+					FileList.push_back( "war3map.lua" );
+					FileList.push_back( "scripts\\war3map.lua" ); //untested
 					FileList.push_back( "war3map.w3e" );
 					FileList.push_back( "war3map.wpm" );
-					if (m_GHost->m_LANWar3Version < 32)
-					//1.32 only uses the 3 files above, but I don't have a hash algorithm for it yet
-					{
-						FileList.push_back( "war3map.doo" );
-						FileList.push_back( "war3map.w3u" );
-						FileList.push_back( "war3map.w3b" );
-						FileList.push_back( "war3map.w3d" );
-						FileList.push_back( "war3map.w3a" );
-						FileList.push_back( "war3map.w3q" );
-					} 
+					FileList.push_back( "war3map.doo" );
+					FileList.push_back( "war3map.w3u" );
+					FileList.push_back( "war3map.w3b" );
+					FileList.push_back( "war3map.w3d" );
+					FileList.push_back( "war3map.w3a" );
+					FileList.push_back( "war3map.w3q" );
 					bool FoundScript = false;
-
+					if (m_GHost->m_LANWar3Version > 31) Val = 0;
 					for(std::vector<std::string> :: iterator i = FileList.begin( ); i != FileList.end( ); ++i )
 					{
 						// don't use scripts\war3map.j if we've already used war3map.j (yes, some maps have both but only war3map.j is used)
 
-						if( FoundScript && (*i == "war3map.lua" || *i == "scripts\\war3map.j" ||  *i == "scripts\\war3map.lua"))
+						if( FoundScript && (*i == "scripts\\war3map.j" || *i == "war3map.lua" || *i == "scripts\\war3map.lua"))
 							continue;
 
 						HANDLE SubFile;
@@ -491,10 +487,18 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 
 								if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 								{
+									if (m_GHost->m_LANWar3Version > 31) // giant Thank You to Fingon for the checksum algorithm
+									{
+										if(FoundScript)
+											Val = ChunkedChecksum((unsigned char*)SubFileData, BytesRead, Val);
+										else
+											Val = XORRotateLeft((unsigned char*)SubFileData, BytesRead);
+									}
+									else
+										Val = ROTL(Val ^ XORRotateLeft((unsigned char*)SubFileData, BytesRead), 3);
 									if( *i == "war3map.j" || *i == "war3map.lua" || *i == "scripts\\war3map.j" || *i == "scripts\\war3map.lua")
 										FoundScript = true;
-
-									Val = ROTL( Val ^ XORRotateLeft( (unsigned char *)SubFileData, BytesRead ), 3 );
+									
 									m_GHost->m_SHA->Update( (unsigned char *)SubFileData, BytesRead );
 									// DEBUG_Print( "*** found: " + *i );
 								}
@@ -1097,4 +1101,16 @@ uint32_t CMap :: XORRotateLeft( unsigned char *data, uint32_t length )
 	}
 
 	return Val;
+}
+
+uint32_t CMap::ChunkedChecksum(unsigned char* data, int32_t length, uint32_t checksum)
+{
+	int32_t index = 0;
+	int32_t t = length - 0x400;
+	while (index <= t)
+	{
+		checksum = ROTL(checksum ^ XORRotateLeft(&data[index], 0x400), 3);
+		index += 0x400;
+	}
+	return checksum;
 }
