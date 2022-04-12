@@ -152,6 +152,10 @@ public:
 	std::vector<GProxyReconnector *> m_PendingReconnects;
 	boost::mutex m_ReconnectMutex;
 
+	boost::thread* inputThread;
+	boost::mutex m_InputMutex;
+	std::string m_InputMessage;
+
 	CGHost( CConfig *CFG );
 	~CGHost( );
 
@@ -174,6 +178,8 @@ public:
 	void EventGameDeleted( CBaseGame *game );
 
 	// other functions
+
+	void inputLoop();
 
 	void ReloadConfigs( );
 	void SetConfigs( CConfig *CFG );

@@ -117,6 +117,9 @@
     <ClCompile Include="base64.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="consolecommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bncsutilinterface.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bonjour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="consolecommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

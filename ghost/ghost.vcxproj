@@ -340,6 +340,7 @@
     <ClCompile Include="bonjour.cpp" />
     <ClCompile Include="commandpacket.cpp" />
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="consolecommand.cpp" />
     <ClCompile Include="crc32.cpp" />
     <ClCompile Include="csvparser.cpp" />
     <ClCompile Include="game.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="bonjour.h" />
     <ClInclude Include="commandpacket.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="consolecommand.h" />
     <ClInclude Include="crc32.h" />
     <ClInclude Include="csvparser.h" />
     <ClInclude Include="game.h" />

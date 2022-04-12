@@ -41,6 +41,8 @@
 #include "game.h"
 #include "game_admin.h"
 
+#include "consolecommand.h"
+
 #include <signal.h>
 #include <stdlib.h>
 
@@ -494,7 +496,7 @@ CGHost :: CGHost( CConfig *CFG )
 	m_Exiting = false;
 	m_ExitingNice = false;
 	m_Enabled = true;
-	m_Version = "17.3";
+	m_Version = "18";
 	m_HostCounter = 1;
 	m_AutoHostMaximumGames = CFG->GetInt( "autohost_maxgames", 0 );
 	m_AutoHostAutoStartPlayers = CFG->GetInt( "autohost_startplayers", 0 );
@@ -699,6 +701,62 @@ CGHost :: CGHost( CConfig *CFG )
 #else
 	CONSOLE_Print( "[GHOST] GHost++ Version " + m_Version + " (without MySQL support)" );
 #endif
+
+	inputThread = new boost::thread(&CGHost::inputLoop, this);
+}
+
+void CGHost :: inputLoop()
+{
+	/*std::string path = "fifo_in";
+
+	std::ifstream fifo;
+	fifo.open(path.c_str(), std::ifstream::in);
+
+	if (!fifo.is_open()) {
+		std::cout << "Unable to open fifo: " << path << std::endl;
+		return;
+	}
+
+	std::string line;
+	bool done = false;
+
+	while (!done) {
+		while (getline(fifo, line)) {
+			boost::mutex::scoped_lock lock(m_InputMutex);
+			m_InputMessage = line;
+			lock.unlock();
+
+			// temporary fix: sometimes the above fails and will cause
+			//  a continuous infinite loop
+			// to prevent this, we sleep for a few milliseconds
+			MILLISLEEP(100);
+		}
+
+		MILLISLEEP(100);
+
+		if (fifo.eof()) {
+			fifo.clear();
+		}
+		else {
+			done = true;
+			std::cout << "Fifo closed." << std::endl;
+		}
+	}*/
+	std::string line;
+	bool done = false;
+
+	while (!done) {
+		while (getline(std::cin, line)) {
+			boost::mutex::scoped_lock lock(m_InputMutex);
+			m_InputMessage = line;
+			lock.unlock();
+
+			// temporary fix: sometimes the above fails and will cause
+			//  a continuous infinite loop
+			// to prevent this, we sleep for a few milliseconds
+			MILLISLEEP(100);
+		}
+	}
 }
 
 CGHost :: ~CGHost( )
@@ -1148,6 +1206,46 @@ bool CGHost :: Update( long usecBlock )
 
 		m_LastAutoHostTime = GetTime( );
 	}
+
+	boost::mutex::scoped_lock lock(m_InputMutex);
+	if (!m_InputMessage.empty()) {
+		/*for (std::vector<CBNET*> ::iterator i = m_BNETs.begin(); i != m_BNETs.end(); i++)
+		{
+			if (m_InputMessage[0] == (*i)->GetCommandTrigger())
+			{
+				(*i)->BotCommand(m_InputMessage, "Console", false, true);
+			}
+			else {
+				(*i)->QueueChatCommand(m_InputMessage);
+			}
+		}*/
+
+		if (m_InputMessage[0] == m_CommandTrigger)
+		{
+			// extract the command trigger, the command, and the payload
+			// e.g. "!say hello world" -> command: "say", payload: "hello world"
+
+			std::string Command;
+			std::string Payload;
+			std::string::size_type PayloadStart = m_InputMessage.find(" ");
+
+			if (PayloadStart != std::string::npos)
+			{
+				Command = m_InputMessage.substr(1, PayloadStart - 1);
+				Payload = m_InputMessage.substr(PayloadStart + 1);
+			}
+			else
+				Command = m_InputMessage.substr(1);
+
+			transform(Command.begin(), Command.end(), Command.begin(), (int(*)(int))tolower);
+			ProcessConsole(Command, Payload, this);
+
+		}
+
+		m_InputMessage = "";
+	}
+
+	lock.unlock();
 
 	return m_Exiting || AdminExit || BNETExit;
 }
