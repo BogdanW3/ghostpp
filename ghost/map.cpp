@@ -260,7 +260,8 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 	if (!MapMPQReady)
 	{
 		std::string map_path = CFG->GetString("map_path", std::string());
-		std::string local_path = m_GHost->m_MapCFGPath + map_path;
+		std::string local_path = m_GHost->m_MapCFGPath
+								 + UTIL_ToString(m_GHost->m_LANWar3Version) + map_path;
 		if (UTIL_FileExists(local_path))
 		{
 			m_MapData = UTIL_FileRead(local_path);
@@ -466,7 +467,6 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 					FileList.push_back( "war3map.w3a" );
 					FileList.push_back( "war3map.w3q" );
 					bool FoundScript = false;
-					if (m_GHost->m_LANWar3Version > 31) Val = 0;
 					for(std::vector<std::string> :: iterator i = FileList.begin( ); i != FileList.end( ); ++i )
 					{
 						// don't use scripts\war3map.j if we've already used war3map.j (yes, some maps have both but only war3map.j is used)
