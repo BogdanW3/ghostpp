@@ -499,9 +499,9 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 				MapHeight.push_back( 0 );
 				MapHeight.push_back( 0 );
 				if (!m_GHost->m_LANBonjour)
-					m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), MapWidth, MapHeight, m_GameName, "Varlock", GetTime( ) - m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath( ), m_SaveGame->GetMagicNumber( ), m_SaveGame->GetNumSlots(), m_SaveGame->GetNumSlots(), m_HostPort, FixedHostCounter, m_EntryKey ) );
+					m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), MapWidth, MapHeight, m_GameName, "BogdanBot", GetTime( ) - m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath( ), m_SaveGame->GetMagicNumber( ), m_SaveGame->GetNumSlots(), m_SaveGame->GetNumSlots(), m_HostPort, FixedHostCounter, m_EntryKey ) );
 				else
-					m_GHost->m_Bonjour->Broadcast_Info(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), MapWidth, MapHeight, m_GameName, "Varlock", m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath(), m_SaveGame->GetMagicNumber(), m_SaveGame->GetNumSlots(), GetSlotsOccupied(), m_HostPort, FixedHostCounter, m_EntryKey, m_Map->GetMapHash());
+					m_GHost->m_Bonjour->Broadcast_Info(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), MapWidth, MapHeight, m_GameName, "BogdanBot", m_CreationTime, "Save\\Multiplayer\\" + m_SaveGame->GetFileNameNoPath(), m_SaveGame->GetMagicNumber(), m_SaveGame->GetNumSlots(), GetSlotsOccupied(), m_HostPort, FixedHostCounter, m_EntryKey, m_Map->GetMapHash());
 			}
 			else
 			{
@@ -510,9 +510,9 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 				uint32_t MapGameType = MAPGAMETYPE_UNKNOWN0;
 				if (!m_GHost->m_LANBonjour)
-					m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), m_Map->GetMapWidth( ), m_Map->GetMapHeight( ), m_GameName, "Varlock", GetTime( ) - m_CreationTime, m_Map->GetMapPath( ), m_Map->GetMapCRC( ), m_Map->GetMapNumPlayers(), m_Map->GetMapNumPlayers(), m_HostPort, FixedHostCounter, m_EntryKey ) );
+					m_GHost->m_UDPSocket->Broadcast( 6112, m_Protocol->SEND_W3GS_GAMEINFO( m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray( MapGameType, false ), m_Map->GetMapGameFlags( ), m_Map->GetMapWidth( ), m_Map->GetMapHeight( ), m_GameName, "BogdanBot", GetTime( ) - m_CreationTime, m_Map->GetMapPath( ), m_Map->GetMapCRC( ), m_Map->GetMapNumPlayers(), m_Map->GetMapNumPlayers(), m_HostPort, FixedHostCounter, m_EntryKey ) );
 				else
-					m_GHost->m_Bonjour->Broadcast_Info(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), m_Map->GetMapWidth(), m_Map->GetMapHeight(), m_GameName, "Varlock", m_CreationTime, m_Map->GetMapPath(), m_Map->GetMapCRC(), m_Map->GetMapNumPlayers(), GetSlotsOccupied(), m_HostPort, FixedHostCounter, m_EntryKey, m_Map->GetMapHash());
+					m_GHost->m_Bonjour->Broadcast_Info(m_GHost->m_TFT, m_GHost->m_LANWar3Version, UTIL_CreateByteArray(MapGameType, false), m_Map->GetMapGameFlags(), m_Map->GetMapWidth(), m_Map->GetMapHeight(), m_GameName, "BogdanBot", m_CreationTime, m_Map->GetMapPath(), m_Map->GetMapCRC(), m_Map->GetMapNumPlayers(), GetSlotsOccupied(), m_HostPort, FixedHostCounter, m_EntryKey, m_Map->GetMapHash());
 			}
 		}
 
