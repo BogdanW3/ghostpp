@@ -1691,6 +1691,16 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, std::string command, s
 	if( Command == "checkme" )
 		SendChat( player, m_GHost->m_Language->CheckedPlayer( User, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A", m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( player->GetExternalIP( ), true ) ), AdminCheck || RootAdminCheck ? "Yes" : "No", IsOwner( User ) ? "Yes" : "No", player->GetSpoofed( ) ? "Yes" : "No", player->GetSpoofedRealm( ).empty( ) ? "N/A" : player->GetSpoofedRealm( ), player->GetReserved( ) ? "Yes" : "No" ) );
 
+	else if ( Command == "save" )
+	{
+		BYTEARRAY CRC;
+		BYTEARRAY Action;
+		Action.push_back(6);
+		UTIL_AppendByteArray(Action, Payload);
+		m_Actions.push(new CIncomingAction(player->GetPID(), CRC, Action));
+		CONSOLE_Print("Saving game to [" + Payload + "]");
+		SendAllActions();
+	}
 	//
 	// !STATS
 	//

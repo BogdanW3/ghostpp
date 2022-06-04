@@ -994,7 +994,16 @@ void CMap :: CheckValid( )
 	else if( m_MapPath[0] == '\\' )
 		CONSOLE_Print( "[MAP] warning - map_path starts with '\\', any replays saved by GHost++ will not be playable in Warcraft III" );
 
-	if( m_MapPath.find( '/' ) != std::string :: npos )
+	
+	// dangerous: fix up map paths for 1.32:
+	if (m_GHost->m_LANWar3Version > 31)
+	{
+		size_t offset = 0;
+		while ((offset = m_MapPath.find('\\')) != std::string::npos)
+		{
+			m_MapPath[offset] = '/';
+		}
+	} else if (m_GHost->m_LANWar3Version < 29 && m_MapPath.find('/') != std::string::npos)
 		CONSOLE_Print( "[MAP] warning - map_path contains forward slashes '/' but it must use Windows style back slashes '\\'" );
 
 	if( m_MapSize.size( ) != 4 )
