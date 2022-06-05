@@ -544,7 +544,7 @@ bool CBNET :: Update( void *fd, void *send_fd )
 		if( !m_OutPackets.empty( ) && GetTicks( ) - m_LastOutPacketTicks >= WaitTicks )
 		{
 			if( m_OutPackets.size( ) > 7 )
-				CONSOLE_Print( "[BNET: " + m_ServerAlias + "] packet queue warning - there are " + UTIL_ToString((unsigned long) m_OutPackets.size( ) ) + " packets waiting to be sent" );
+				CONSOLE_Print( "[BNET: " + m_ServerAlias + "] packet queue warning - there are " + UTIL_ToString( m_OutPackets.size( ) ) + " packets waiting to be sent" );
 
 			m_Socket->PutBytes( m_OutPackets.front( ) );
 			m_LastOutPacketSize = (uint32_t)m_OutPackets.front( ).size( );
@@ -1627,9 +1627,9 @@ void CBNET :: BotCommand(std::string Message, std::string User, bool Whisper, bo
 			boost::mutex::scoped_lock lock( m_GHost->m_GamesMutex );
 
 			if( m_GHost->m_CurrentGame )
-				QueueChatCommand( m_GHost->m_Language->GameIsInTheLobby( m_GHost->m_CurrentGame->GetDescription( ), UTIL_ToString((unsigned long) m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ), User, Whisper );
+				QueueChatCommand( m_GHost->m_Language->GameIsInTheLobby( m_GHost->m_CurrentGame->GetDescription( ), UTIL_ToString( m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ), User, Whisper );
 			else
-				QueueChatCommand( m_GHost->m_Language->ThereIsNoGameInTheLobby( UTIL_ToString((unsigned long) m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ), User, Whisper );
+				QueueChatCommand( m_GHost->m_Language->ThereIsNoGameInTheLobby( UTIL_ToString( m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ), User, Whisper );
 
 			lock.unlock( );
 		}
@@ -2188,7 +2188,7 @@ void CBNET :: QueueChatCommand(std::string chatCommand )
 		boost::mutex::scoped_lock packetsLock( m_PacketsMutex );
 
 		if( m_OutPackets.size( ) > 10 )
-			CONSOLE_Print( "[BNET: " + m_ServerAlias + "] attempted to queue chat command [" + chatCommand + "] but there are too many (" + UTIL_ToString((unsigned long) m_OutPackets.size( ) ) + ") packets queued, discarding" );
+			CONSOLE_Print( "[BNET: " + m_ServerAlias + "] attempted to queue chat command [" + chatCommand + "] but there are too many (" + UTIL_ToString( m_OutPackets.size( ) ) + ") packets queued, discarding" );
 		else
 		{
 			CONSOLE_Print( "[QUEUED: " + m_ServerAlias + "] " + chatCommand );

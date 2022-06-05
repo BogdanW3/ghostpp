@@ -129,7 +129,7 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 
 			in.close( );
 
-			CONSOLE_Print( "[GAME: " + m_GameName + "] loaded " + UTIL_ToString((unsigned long) m_IPBlackList.size( ) ) + " lines from IP blacklist file" );
+			CONSOLE_Print( "[GAME: " + m_GameName + "] loaded " + UTIL_ToString( m_IPBlackList.size( ) ) + " lines from IP blacklist file" );
 		}
 	}
 
@@ -1067,11 +1067,13 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 	// start the gameover timer if there's only one player left
 
-	if( m_Players.size( ) == 1 && m_FakePlayerPID == 255 && m_GameOverTime == 0 && ( m_GameLoading || m_GameLoaded ) )
+	// No gameover for singleplayer anymore, is this even useful to anyone?
+	// Of course, disabling this to get bot's inputs in SP, mostly for HMC
+	/*if (m_Players.size() == 1 && m_FakePlayerPID == 255 && m_GameOverTime == 0 && (m_GameLoading || m_GameLoaded))
 	{
 		CONSOLE_Print( "[GAME: " + m_GameName + "] gameover timer started (one player left)" );
 		m_GameOverTime = GetTime( );
-	}
+	}*/
 
 	// finish the gameover timer
 
@@ -1761,7 +1763,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 
 	if( joinPlayer->GetName( ).empty( ) || joinPlayer->GetName( ).size( ) > 15 )
 	{
-		CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] is trying to join the game with an invalid name of length " + UTIL_ToString((unsigned long) joinPlayer->GetName( ).size( ) ) );
+		CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] is trying to join the game with an invalid name of length " + UTIL_ToString( joinPlayer->GetName( ).size( ) ) );
 		potential->Send( m_Protocol->SEND_W3GS_REJECTJOIN( REJECTJOIN_FULL ) );
 		potential->SetDeleteMe( true );
 		return;

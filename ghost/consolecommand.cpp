@@ -394,9 +394,9 @@ void ProcessConsole(std::string Command, std::string Payload, CGHost *m_GHost)
 	else if (Command == "getgames")
 	{
 		if (m_GHost->m_CurrentGame)
-			CONSOLE_Print(m_GHost->m_Language->GameIsInTheLobby(m_GHost->m_CurrentGame->GetDescription(), UTIL_ToString((unsigned long)m_GHost->m_Games.size()), UTIL_ToString(m_GHost->m_MaxGames)));
+			CONSOLE_Print(m_GHost->m_Language->GameIsInTheLobby(m_GHost->m_CurrentGame->GetDescription(), UTIL_ToString(m_GHost->m_Games.size()), UTIL_ToString(m_GHost->m_MaxGames)));
 		else
-			CONSOLE_Print(m_GHost->m_Language->ThereIsNoGameInTheLobby(UTIL_ToString((unsigned long)m_GHost->m_Games.size()), UTIL_ToString(m_GHost->m_MaxGames)));
+			CONSOLE_Print(m_GHost->m_Language->ThereIsNoGameInTheLobby(UTIL_ToString(m_GHost->m_Games.size()), UTIL_ToString(m_GHost->m_MaxGames)));
 	}
 
 	//

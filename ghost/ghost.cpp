@@ -791,7 +791,7 @@ CGHost :: ~CGHost( )
 	// but if you try to recreate the CGHost object within a single session you will probably leak resources!
 
 	if( !m_Callables.empty( ) )
-		CONSOLE_Print( "[GHOST] warning - " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " orphaned callables were leaked (this is not an error)" );
+		CONSOLE_Print( "[GHOST] warning - " + UTIL_ToString( m_Callables.size( ) ) + " orphaned callables were leaked (this is not an error)" );
 
 	delete m_Language;
 	delete m_Map;
@@ -877,7 +877,7 @@ bool CGHost :: Update( long usecBlock )
 			if( !m_AllGamesFinished )
 			{
 				CONSOLE_Print( "[GHOST] all games finished, waiting 60 seconds for threads to finish" );
-				CONSOLE_Print( "[GHOST] there are " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " threads in progress" );
+				CONSOLE_Print( "[GHOST] there are " + UTIL_ToString( m_Callables.size( ) ) + " threads in progress" );
 				m_AllGamesFinished = true;
 				m_AllGamesFinishedTime = GetTime( );
 			}
@@ -891,7 +891,7 @@ bool CGHost :: Update( long usecBlock )
 				else if( GetTime( ) - m_AllGamesFinishedTime >= 60 )
 				{
 					CONSOLE_Print( "[GHOST] waited 60 seconds for threads to finish, exiting anyway" );
-					CONSOLE_Print( "[GHOST] there are " + UTIL_ToString((unsigned long) m_Callables.size( ) ) + " threads still in progress which will be terminated" );
+					CONSOLE_Print( "[GHOST] there are " + UTIL_ToString( m_Callables.size( ) ) + " threads still in progress which will be terminated" );
 					m_Exiting = true;
 				}
 			}

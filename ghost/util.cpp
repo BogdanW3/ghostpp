@@ -254,6 +254,15 @@ BYTEARRAY UTIL_ExtractHexNumbers(std::string s )
 	return result;
 }
 
+std::string UTIL_ToString(unsigned long long i)
+{
+	std::string result;
+	std::stringstream SS;
+	SS << i;
+	SS >> result;
+	return result;
+}
+
 std::string UTIL_ToString( unsigned long i )
 {
 	std::string result;
