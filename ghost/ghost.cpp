@@ -27,6 +27,7 @@
 #include "language.h"
 #include "socket.h"
 #include "bonjour.h"
+#include "ghostw3hmc.h"
 #include "ghostdb.h"
 #include "ghostdbsqlite.h"
 #include "ghostdbmysql.h"
@@ -429,6 +430,14 @@ CGHost :: CGHost( CConfig *CFG )
 
 	CONSOLE_Print( "[GHOST] opening secondary (local) database" );
 	m_DBLocal = new CGHostDBSQLite( CFG );
+
+
+	if (CFG->GetInt("bot_w3hmc", 0) != 0)
+	{ 
+		m_W3HMC = new CGHostW3HMC(CFG->GetInt("bot_w3hmcdebug", 0) == 1);
+	}
+	else
+		m_W3HMC = NULL;
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not
@@ -1787,6 +1796,12 @@ void CGHost :: CreateGame( CMap *map, unsigned char gameState, bool saveGame, st
 		m_CurrentGame = new CGame( this, map, m_SaveGame, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer );
 	else
 		m_CurrentGame = new CGame( this, map, NULL, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer );
+
+	if (map->GetMapW3HMCEnabled() && map->GetMapW3HMCBotSlot() >= 0)
+	{
+		m_CurrentGame->CreateFakePlayer(map->GetMapW3HMCBotSlot());
+		m_W3HMC->m_PID = m_CurrentGame->GetFakePlayerPID();
+	}
 
 	// todotodo: check if listening failed and report the error to the user
 

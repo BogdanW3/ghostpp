@@ -769,6 +769,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 		if( FinishedLoading )
 		{
+			m_FinishedLoadingTime = time(0);
+			struct tm tstruct;
+			tstruct = *localtime(&m_FinishedLoadingTime);
+
 			m_LastActionSentTicks = GetTicks( );
 			m_GameLoading = false;
 			m_GameLoaded = true;
@@ -4742,12 +4746,12 @@ void CBaseGame :: DeleteVirtualHost( )
 	m_VirtualHostPID = 255;
 }
 
-void CBaseGame :: CreateFakePlayer( )
+void CBaseGame :: CreateFakePlayer( int slot = -1)
 {
 	if( m_FakePlayerPID != 255 )
 		return;
 
-	unsigned char SID = GetEmptySlot( false );
+	unsigned char SID = ((slot == -1) ? GetEmptySlot( false ) : slot);
 
 	if( SID < m_Slots.size( ) )
 	{

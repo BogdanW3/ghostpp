@@ -45,6 +45,8 @@ class CBaseGame
 {
 public:
 	CGHost *m_GHost;
+	std::queue<CIncomingAction*> m_Actions;			// queue of actions to be sent
+	time_t m_FinishedLoadingTime;
 
 protected:
 	CTCPServer *m_Socket;								// listening socket
@@ -53,7 +55,6 @@ protected:
 	std::vector<CPotentialPlayer *> m_Potentials;		// vector of potential players (connections that haven't sent a W3GS_REQJOIN packet yet)
 	std::vector<CGamePlayer *> m_Players;				// vector of players
 	std::vector<CCallableScoreCheck *> m_ScoreChecks;
-	std::queue<CIncomingAction *> m_Actions;			// queue of actions to be sent
 	std::vector<std::string> m_Reserved;				// vector of player names with reserved slots (from the !hold command)
 	std::set<std::string> m_IgnoredNames;				// set of player names to NOT print ban messages for when joining because they've already been printed
 	std::set<std::string> m_IPBlackList;				// set of IP addresses to blacklist from joining (todotodo: convert to uint32's for efficiency)
@@ -149,6 +150,7 @@ public:
 	virtual uint16_t GetHostPort( )						{ return m_HostPort; }
 	virtual unsigned char GetGameState( )				{ return m_GameState; }
 	virtual unsigned char GetGProxyEmptyActions( )		{ return m_GProxyEmptyActions; }
+	virtual char GetFakePlayerPID( )					{ return m_FakePlayerPID; }
 	virtual std::string GetGameName( )					{ return m_GameName; }
 	virtual std::string GetLastGameName( )				{ return m_LastGameName; }
 	virtual std::string GetVirtualHostName( )			{ return m_VirtualHostName; }
@@ -280,7 +282,7 @@ public:
 	virtual void StopLaggers(std::string reason );
 	virtual void CreateVirtualHost( );
 	virtual void DeleteVirtualHost( );
-	virtual void CreateFakePlayer( );
+	virtual void CreateFakePlayer(int slot);
 	virtual void DeleteFakePlayer( );
 };
 

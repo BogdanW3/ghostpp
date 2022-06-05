@@ -117,6 +117,13 @@ private:
 	std::string m_MapType;						// config value: map type (for stats class)
 	std::string m_MapMatchMakingCategory;		// config value: map matchmaking category (for matchmaking)
 	std::string m_MapStatsW3MMDCategory;		// config value: map stats w3mmd category (for saving w3mmd stats)
+	std::string m_MapW3HMCBotName;
+	std::string m_MapW3HMCGCFilename;
+	std::string m_MapW3HMCSecret;
+	bool m_MapW3HMCEnabled;
+	int m_MapW3HMCBotSlot;
+	char m_MapW3HMCTriggerID1;
+	char m_MapW3HMCTriggerID2;
 	std::string m_MapDefaultHCL;				// config value: map default HCL to use (this should really be specified elsewhere and not part of the map config)
 	uint32_t m_MapDefaultPlayerScore;			// config value: map default player score (for matchmaking)
 	std::string m_MapLocalPath;					// config value: map local path
@@ -152,6 +159,13 @@ public:
 	std::string GetMapType( )				{ return m_MapType; }
 	std::string GetMapMatchMakingCategory( ){ return m_MapMatchMakingCategory; }
 	std::string GetMapStatsW3MMDCategory( )	{ return m_MapStatsW3MMDCategory; }
+	std::string GetMapW3HMCGCFilename()		{ return m_MapW3HMCGCFilename; }
+	std::string GetMapW3HMCSecret()			{ return m_MapW3HMCSecret; }
+	std::string GetMapW3HMCBotName()		{ return m_MapW3HMCBotName; }
+	int GetMapW3HMCBotSlot()				{ return m_MapW3HMCBotSlot; }
+	bool GetMapW3HMCEnabled()				{ return m_MapW3HMCEnabled; }
+	char GetMapW3HMCTriggerID1()			{ return m_MapW3HMCTriggerID1; }
+	char GetMapW3HMCTriggerID2()			{ return m_MapW3HMCTriggerID2; }
 	std::string GetMapDefaultHCL( )			{ return m_MapDefaultHCL; }
 	uint32_t GetMapDefaultPlayerScore( )	{ return m_MapDefaultPlayerScore; }
 	std::string GetMapLocalPath( )			{ return m_MapLocalPath; }

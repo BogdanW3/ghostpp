@@ -38,6 +38,7 @@ class CBNET;
 class CBaseGame;
 class CAdminGame;
 class CGHostDB;
+class CGHostW3HMC;
 class CBaseCallable;
 class CLanguage;
 class CMap;
@@ -69,6 +70,7 @@ public:
 	boost::thread_group m_GameThreads;		// the threads for games in progress and stuff
 	boost::mutex m_GamesMutex;
 	CGHostDB *m_DB;							// database
+	CGHostW3HMC* m_W3HMC;
 	CGHostDB *m_DBLocal;					// local database (for temporary data)
 	std::vector<CBaseCallable *> m_Callables;	// vector of orphaned callables waiting to die
 	boost::mutex m_CallablesMutex;

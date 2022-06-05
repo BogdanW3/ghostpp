@@ -36,6 +36,7 @@
 #include "stats.h"
 #include "statsdota.h"
 #include "statsw3mmd.h"
+#include "ghostw3hmc.h"
 
 #include <cmath>
 #include <string.h>
@@ -70,6 +71,9 @@ public:
 CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, std::string nGameName, std::string nOwnerName, std::string nCreatorName, std::string nCreatorServer ) : CBaseGame( nGHost, nMap, nSaveGame, nHostPort, nGameState, nGameName, nOwnerName, nCreatorName, nCreatorServer ), m_DBBanLast( NULL ), m_Stats( NULL ) ,m_CallableGameAdd( NULL )
 {
 	m_DBGame = new CDBGame( 0, std::string( ), m_Map->GetMapPath( ), std::string( ), std::string( ), std::string( ), 0 );
+
+	if (m_Map->GetMapW3HMCEnabled())
+		m_GHost->m_W3HMC->SetMapData(this, m_Map->GetMapW3HMCGCFilename());
 
 	if( m_Map->GetMapType( ) == "w3mmd" )
 		m_Stats = new CStatsW3MMD( this, m_Map->GetMapStatsW3MMDCategory( ) );
@@ -146,6 +150,28 @@ CGame :: ~CGame( )
 bool CGame :: Update( void *fd, void *send_fd )
 {
 	// update callables
+
+	if (m_GHost->m_W3HMC)
+	{
+		for (std::vector<CCallableDoCURL*> ::iterator i = m_GHost->m_W3HMC->m_SyncOutgoing.begin(); i != m_GHost->m_W3HMC->m_SyncOutgoing.end(); )
+		{
+			if ((*i)->GetReady())
+			{
+				std::string result = (*i)->GetResult();
+
+				if ((*i)->NoReply() == false)
+					m_GHost->m_W3HMC->SendString((*i)->GetReqID() + " " + result);
+
+				m_GHost->m_W3HMC->RecoverCallable(*i);
+				delete* i;
+				i = m_GHost->m_W3HMC->m_SyncOutgoing.erase(i);
+			}
+			else
+			{
+				i++;
+			}
+		}
+	}
 
 	for(std::vector<PairedBanCheck> :: iterator i = m_PairedBanChecks.begin( ); i != m_PairedBanChecks.end( ); )
 	{
@@ -332,6 +358,9 @@ void CGame :: EventPlayerDeleted( CGamePlayer *player )
 bool CGame :: EventPlayerAction( CGamePlayer *player, CIncomingAction *action )
 {
 	bool success = CBaseGame :: EventPlayerAction( player, action );
+
+	if (success && m_GHost->m_W3HMC)
+		m_GHost->m_W3HMC->ProcessAction(action);
 
 	// give the stats class a chance to process the action
 
@@ -958,7 +987,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, std::string command, s
 			else if( Command == "fakeplayer" && !m_CountDownStarted )
 			{
 				if( m_FakePlayerPID == 255 )
-					CreateFakePlayer( );
+					CreateFakePlayer( -1 );
 				else
 					DeleteFakePlayer( );
 			}

@@ -903,6 +903,15 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 	m_MapType = CFG->GetString( "map_type", std::string( ) );
 	m_MapMatchMakingCategory = CFG->GetString( "map_matchmakingcategory", std::string( ) );
 	m_MapStatsW3MMDCategory = CFG->GetString( "map_statsw3mmdcategory", std::string( ) );
+
+	m_MapW3HMCEnabled = CFG->GetInt("map_w3hmc", 0) != 0;
+	m_MapW3HMCGCFilename = CFG->GetString("map_w3hmcgcname", "W3HMC");
+	m_MapW3HMCTriggerID1 = CFG->GetInt("map_w3hmctid1", 0x92);
+	m_MapW3HMCTriggerID2 = CFG->GetInt("map_w3hmctid2", 0x02);
+	m_MapW3HMCBotName = CFG->GetString("map_w3hmcbotname", "W3HMC");
+	m_MapW3HMCBotSlot = CFG->GetInt("map_w3hmcbotslot", 0);
+	m_MapW3HMCSecret = CFG->GetString("map_w3hmcsecret", std::string());
+
 	m_MapDefaultHCL = CFG->GetString( "map_defaulthcl", std::string( ) );
 	m_MapDefaultPlayerScore = CFG->GetInt( "map_defaultplayerscore", 1000 );
 	m_MapLoadInGame = CFG->GetInt( "map_loadingame", 0 ) == 0 ? false : true;

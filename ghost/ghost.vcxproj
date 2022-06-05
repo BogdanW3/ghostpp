@@ -355,6 +355,7 @@
     <ClCompile Include="ghostdb.cpp" />
     <ClCompile Include="ghostdbmysql.cpp" />
     <ClCompile Include="ghostdbsqlite.cpp" />
+    <ClCompile Include="ghostw3hmc.cpp" />
     <ClCompile Include="gpsprotocol.cpp" />
     <ClCompile Include="language.cpp" />
     <ClCompile Include="map.cpp" />
@@ -392,6 +393,7 @@
     <ClInclude Include="ghostdb.h" />
     <ClInclude Include="ghostdbmysql.h" />
     <ClInclude Include="ghostdbsqlite.h" />
+    <ClInclude Include="ghostw3hmc.h" />
     <ClInclude Include="gpsprotocol.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="language.h" />
