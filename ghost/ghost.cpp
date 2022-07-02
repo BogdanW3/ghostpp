@@ -518,7 +518,7 @@ CGHost :: CGHost( CConfig *CFG )
 	m_AllGamesFinished = false;
 	m_AllGamesFinishedTime = 0;
 	m_TFT = CFG->GetInt( "bot_tft", 1 ) != 0;
-	m_PTR = CFG->GetInt( "bot_ptr", 1 ) != 0;
+	m_PTR = CFG->GetInt( "bot_ptr", 0 ) != 0;
 
 	if( m_TFT )
 		CONSOLE_Print( "[GHOST] acting as Warcraft III: The Frozen Throne" );
@@ -1453,7 +1453,7 @@ void CGHost :: ExtractScripts( )
 	{
 		HANDLE Casc;
 		wchar_t WWarcraft3Path[255];
-		std::string CascPath = m_Warcraft3Path + (m_PTR ? ":w3t" : "");
+		std::string CascPath = m_Warcraft3Path + (m_PTR ? ":w3t" : ":w3");
 		mbstowcs(WWarcraft3Path, CascPath.c_str(), 255);
 		if (CascOpenStorage(WWarcraft3Path, CASC_LOCALE_ALL, &Casc))
 		{

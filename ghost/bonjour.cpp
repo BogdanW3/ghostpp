@@ -112,7 +112,7 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 	}
 
 	std::string game_data_d;
-	if (war3Version == 32) // try this for games with short names on pre32?
+	if (war3Version >= 32) // try this for games with short names on pre32?
 		game_data_d = gameName + std::string("\0\0", 2) + statstringE + std::string("\0", 1) + (char)slotsTotal +
 			std::string("\0\0\0", 3) + std::string("\x01\x20\x43\x00", 4) +
 			std::string(1, port % 0x100) + std::string(1, port >> 8);
@@ -133,7 +133,7 @@ void CBonjour :: Broadcast_Info(bool TFT, unsigned char war3Version, BYTEARRAY m
 		"\x1A\x0A\x0A\x05_type\x12\x01\x31" + "\x1A\x0D\x0A\x08_subtype\x12\x01\x30" +
 		"\x1A" + (char)(15 + secret.size()) + "\x0A\x0Bgame_secret\x12" + (char)secret.size() + secret +
 		"\x1A" + (char)(14 + game_data.size()) + "\x01\x0A\x09game_data\x12" + (char)game_data.size() + "\x01" + game_data +
-		"\x1A\x0C\x0A\x07game_id\x12\x01" + ((war3Version == 32) ? "1":"2") +
+		"\x1A\x0C\x0A\x07game_id\x12\x01" + ((war3Version >= 32) ? "1":"2") +
 		"\x1A\x0B\x0A\x06_flags\x12\x01\x30";
 	/*else
 		w66 = std::string("\x0A") + ((char)gameName.size()) + gameName + std::string("\x10\0", 2) +

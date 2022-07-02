@@ -27,10 +27,10 @@
 
 #include <filesystem>
 
-#define __STORMLIB_SELF__
-#include <StormLib.h>
 #define __CASCLIB_SELF__
 #include <CascLib.h>
+#define __STORMLIB_SELF__
+#include <StormLib.h>
 
 #define ROTL(x,n) ((x)<<(n))|((x)>>(32-(n)))	// this won't work with signed types
 #define ROTR(x,n) ((x)>>(n))|((x)<<(32-(n)))	// this won't work with signed types
@@ -457,7 +457,7 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 					FileList.push_back( "war3map.j" );
 					FileList.push_back( "scripts\\war3map.j" );
 					FileList.push_back( "war3map.lua" );
-					FileList.push_back( "scripts\\war3map.lua" ); //untested
+					FileList.push_back( "scripts\\war3map.lua" );
 					FileList.push_back( "war3map.w3e" );
 					FileList.push_back( "war3map.wpm" );
 					FileList.push_back( "war3map.doo" );
@@ -487,10 +487,13 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 
 								if( SFileReadFile( SubFile, SubFileData, FileLength, &BytesRead, nullptr) )
 								{
-									if (m_GHost->m_LANWar3Version > 31) // giant Thank You to Fingon for the checksum algorithm
+									if (m_GHost->m_LANWar3Version >= 32) // giant Thank You to Fingon for the checksum algorithm
 									{
-										if(FoundScript)
-											Val = ChunkedChecksum((unsigned char*)SubFileData, BytesRead, Val);
+										if (FoundScript)
+											if (m_GHost->m_LANWar3Version >= 33) // I found this one out myself
+												Val = ROTL(Val ^ XORRotateLeft((unsigned char*)SubFileData, BytesRead), 3);
+											else
+												Val = ChunkedChecksum((unsigned char*)SubFileData, BytesRead, Val);
 										else
 											Val = XORRotateLeft((unsigned char*)SubFileData, BytesRead);
 									}
@@ -995,7 +998,7 @@ void CMap :: CheckValid( )
 {
 	// todotodo: should this code fix any errors it sees rather than just warning the user?
 
-	if( m_MapPath.empty( ) || m_MapPath.length( ) > 53 )
+	if( m_MapPath.empty( ) || m_MapPath.length( ) > 260 )
 	{
 		m_Valid = false;
 		CONSOLE_Print( "[MAP] invalid map_path detected" );
