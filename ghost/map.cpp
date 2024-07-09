@@ -355,16 +355,16 @@ void CMap::Load(CConfig* CFG, std::string nCFGFile)
 		// calculate map_crc (this is not the CRC) and map_sha1
 		// a big thank you to Strilanc for figuring the map_crc algorithm out
 
-		std::string CommonJ = UTIL_FileRead( m_GHost->m_MapCFGPath + "common.j" );
+		std::string CommonJ = UTIL_FileRead( m_GHost->m_MapCFGPath + "\\" + std::to_string(m_GHost->m_LANWar3Version) + "\\" + "common.j" );
 
 		if( CommonJ.empty( ) )
-			CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1 - unable to read file [" + m_GHost->m_MapCFGPath + "common.j]" );
+			CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1 - unable to read file [" + m_GHost->m_MapCFGPath + "\\" + std::to_string(m_GHost->m_LANWar3Version) + "\\" + "common.j]" );
 		else
 		{
-			std::string BlizzardJ = UTIL_FileRead( m_GHost->m_MapCFGPath + "blizzard.j" );
+			std::string BlizzardJ = UTIL_FileRead( m_GHost->m_MapCFGPath + "\\" + std::to_string(m_GHost->m_LANWar3Version) + "\\" + "blizzard.j" );
 
 			if( BlizzardJ.empty( ) )
-				CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1 - unable to read file [" + m_GHost->m_MapCFGPath + "blizzard.j]" );
+				CONSOLE_Print( "[MAP] unable to calculate map_crc/sha1 - unable to read file [" + m_GHost->m_MapCFGPath + "\\" + std::to_string(m_GHost->m_LANWar3Version) + "\\" + "blizzard.j]" );
 			else
 			{
 				uint32_t Val = 0;

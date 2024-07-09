@@ -1473,8 +1473,8 @@ void CGHost :: ExtractScripts( )
 
 					if (CascReadFile(SubFile, SubFileData, FileLength, &BytesRead))
 					{
-						CONSOLE_Print("[GHOST] extracting Scripts\\common.j from CASC to [" + m_MapCFGPath + "common.j]");
-						UTIL_FileWrite(m_MapCFGPath + "common.j", (unsigned char*)SubFileData, BytesRead);
+						CONSOLE_Print("[GHOST] extracting Scripts\\common.j from CASC to [" + m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "common.j]");
+						UTIL_FileWrite(m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "common.j", (unsigned char*)SubFileData, BytesRead);
 					}
 					else
 						CONSOLE_Print("[GHOST] warning - unable to extract Scripts\\common.j from CASC");
@@ -1500,8 +1500,8 @@ void CGHost :: ExtractScripts( )
 
 					if (CascReadFile(SubFile, SubFileData, FileLength, &BytesRead))
 					{
-						CONSOLE_Print("[GHOST] extracting Scripts\\blizzard.j from CASC to [" + m_MapCFGPath + "blizzard.j]");
-						UTIL_FileWrite(m_MapCFGPath + "blizzard.j", (unsigned char*)SubFileData, BytesRead);
+						CONSOLE_Print("[GHOST] extracting Scripts\\blizzard.j from CASC to [" + m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "blizzard.j]");
+						UTIL_FileWrite(m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "blizzard.j", (unsigned char*)SubFileData, BytesRead);
 					}
 					else
 						CONSOLE_Print("[GHOST] warning - unable to extract Scripts\\blizzard.j from CASC");
@@ -1547,8 +1547,8 @@ void CGHost :: ExtractScripts( )
 
 					if (SFileReadFile(SubFile, SubFileData, FileLength, &BytesRead, nullptr))
 					{
-						CONSOLE_Print("[GHOST] extracting Scripts\\common.j from MPQ file to [" + m_MapCFGPath + "common.j]");
-						UTIL_FileWrite(m_MapCFGPath + "common.j", (unsigned char*)SubFileData, BytesRead);
+						CONSOLE_Print("[GHOST] extracting Scripts\\common.j from MPQ file to [" + m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "common.j]");
+						UTIL_FileWrite(m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "common.j", (unsigned char*)SubFileData, BytesRead);
 					}
 					else
 						CONSOLE_Print("[GHOST] warning - unable to extract Scripts\\common.j from MPQ file");
@@ -1574,8 +1574,8 @@ void CGHost :: ExtractScripts( )
 
 					if (SFileReadFile(SubFile, SubFileData, FileLength, &BytesRead, nullptr))
 					{
-						CONSOLE_Print("[GHOST] extracting Scripts\\blizzard.j from MPQ file to [" + m_MapCFGPath + "blizzard.j]");
-						UTIL_FileWrite(m_MapCFGPath + "blizzard.j", (unsigned char*)SubFileData, BytesRead);
+						CONSOLE_Print("[GHOST] extracting Scripts\\blizzard.j from MPQ file to [" + m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "blizzard.j]");
+						UTIL_FileWrite(m_MapCFGPath + "\\" + std::to_string(m_LANWar3Version) + "\\" + "blizzard.j", (unsigned char*)SubFileData, BytesRead);
 					}
 					else
 						CONSOLE_Print("[GHOST] warning - unable to extract Scripts\\blizzard.j from MPQ file");
