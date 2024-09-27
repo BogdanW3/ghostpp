@@ -48,7 +48,6 @@
 #endif
 
 
-#include <mysql/mysql.h>
 #include <boost/thread.hpp>
 
 #define W3HMC_REQUEST_INIT			1
@@ -70,7 +69,7 @@
 #define W3HMC_ARG_CURL_FOLLOWLOC	"9"
 
 //
-// CGHostDBMySQL
+// CGHostW3HMC
 //
 
 CGHostW3HMC :: CGHostW3HMC( bool debug )

@@ -172,8 +172,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>E:\boost_1_78_0;..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;UNICODE;_UNICODE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -182,7 +182,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Iphlpapi.lib;boost_thread-vc143-mt-x64-1_78.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Iphlpapi.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\zlib\lib;..\mysql\lib\opt;..\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -216,8 +216,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>E:\boost_1_78_0;..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;UNICODE;_UNICODE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -227,7 +227,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Iphlpapi.lib;boost_thread-vc143-mt-x64-1_78.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Iphlpapi.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\boost_1_78_0\lib64-msvc-14.3;$(BONJOUR_SDK_HOME)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -260,8 +260,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug MySQL|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>E:\boost_1_78_0;..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;GHOST_MYSQL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;UNICODE;_UNICODE;_DEBUG;_CONSOLE;GHOST_MYSQL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -271,7 +271,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Iphlpapi.lib;boost_thread-vc143-mt-x64-1_78.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Iphlpapi.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\zlib\lib;..\mysql\lib\opt;..\boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -305,8 +305,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>E:\boost_1_78_0;..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;GHOST_MYSQL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\bncsutil\src;$(BONJOUR_SDK_HOME)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;UNICODE;_UNICODE;NDEBUG;_CONSOLE;GHOST_MYSQL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>
@@ -316,7 +316,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Iphlpapi.lib;boost_thread-vc143-mt-x64-1_78.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Iphlpapi.lib;ws2_32.lib;winmm.lib;dnssd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>E:\boost_1_78_0\lib64-msvc-14.3;$(BONJOUR_SDK_HOME)Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
